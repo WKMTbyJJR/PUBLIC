@@ -1,0 +1,1070 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Asistente de Antigüedades | Santa Emilia</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Raleway:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --gold: #c6a664;
+            --dark-gold: #a28d50;
+            --cream: #f8f5e9;
+            --dark-brown: #3c2415;
+            --light-brown: #8b6c5c;
+        }
+        
+        body {
+            font-family: 'Raleway', sans-serif;
+            background-color: var(--cream);
+            color: var(--dark-brown);
+        }
+        
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Playfair Display', serif;
+        }
+        
+        .gold-text {
+            color: var(--gold);
+        }
+        
+        .gold-bg {
+            background-color: var(--gold);
+        }
+        
+        .dark-gold-bg {
+            background-color: var(--dark-gold);
+        }
+        
+        .cream-bg {
+            background-color: var(--cream);
+        }
+        
+        .dark-brown-bg {
+            background-color: var(--dark-brown);
+        }
+        
+        .border-gold {
+            border-color: var(--gold);
+        }
+        
+        .btn-gold {
+            background-color: var(--gold);
+            color: white;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-gold:hover {
+            background-color: var(--dark-gold);
+        }
+        
+        .custom-input {
+            border: 1px solid var(--light-brown);
+            background-color: rgba(255, 255, 255, 0.9);
+            transition: all 0.3s ease;
+        }
+        
+        .custom-input:focus {
+            border-color: var(--gold);
+            box-shadow: 0 0 0 2px rgba(198, 166, 100, 0.2);
+        }
+        
+        .result-section {
+            border-left: 4px solid var(--gold);
+            background-color: white;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+        
+        .ornament {
+            position: relative;
+        }
+        
+        .ornament:before, .ornament:after {
+            content: "❦";
+            font-size: 1.5rem;
+            color: var(--gold);
+            margin: 0 15px;
+            opacity: 0.8;
+        }
+        
+        .header-ornate {
+            position: relative;
+        }
+        
+        .header-ornate:after {
+            content: "";
+            display: block;
+            width: 100px;
+            height: 2px;
+            background-color: var(--gold);
+            margin: 10px auto 30px;
+        }
+        
+        .section-title {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .section-title:after {
+            content: "";
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background-color: var(--gold);
+        }
+        
+        #loadingOverlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(60, 36, 21, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        
+        .spinner {
+            width: 70px;
+            text-align: center;
+        }
+        
+        .spinner > div {
+            width: 14px;
+            height: 14px;
+            background-color: var(--gold);
+            border-radius: 100%;
+            display: inline-block;
+            animation: sk-bouncedelay 1.4s infinite ease-in-out both;
+        }
+        
+        .spinner .bounce1 {
+            animation-delay: -0.32s;
+        }
+        
+        .spinner .bounce2 {
+            animation-delay: -0.16s;
+        }
+        
+        @keyframes sk-bouncedelay {
+            0%, 80%, 100% { 
+                transform: scale(0);
+            } 40% { 
+                transform: scale(1.0);
+            }
+        }
+        
+        .url-list {
+            max-height: 200px;
+            overflow-y: auto;
+            border: 1px solid var(--light-brown);
+            border-radius: 0.375rem;
+        }
+        
+        .url-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem 1rem;
+            border-bottom: 1px solid rgba(139, 108, 92, 0.2);
+        }
+        
+        .url-item:last-child {
+            border-bottom: none;
+        }
+        
+        .copy-btn {
+            background-color: transparent;
+            color: var(--gold);
+            border: none;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+        
+        .copy-btn:hover {
+            color: var(--dark-gold);
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .tab-btn {
+            border-bottom: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+        
+        .tab-btn.active {
+            border-bottom: 2px solid var(--gold);
+            color: var(--gold);
+        }
+    </style>
+</head>
+<body>
+    <div id="loadingOverlay" class="hidden">
+        <div class="text-center">
+            <div class="spinner">
+                <div class="bounce1"></div>
+                <div class="bounce2"></div>
+                <div class="bounce3"></div>
+            </div>
+            <p class="mt-4 text-white font-semibold">Analizando antigüedad...</p>
+            <p class="text-white text-sm mt-1">Este proceso puede tardar hasta un minuto</p>
+        </div>
+    </div>
+
+    <div class="container mx-auto px-4 py-8">
+        <!-- Header -->
+        <header class="text-center mb-12">
+            <h1 class="text-4xl md:text-5xl font-bold gold-text header-ornate">Palacio Santa Emilia</h1>
+            <p class="text-xl mt-2 text-light-brown">Asistente de Análisis de Antigüedades</p>
+            <div class="ornament mt-4"></div>
+        </header>
+
+        <!-- API Key Section -->
+        <div class="mb-12 bg-white rounded-lg p-6 shadow-md">
+            <h2 class="text-2xl font-semibold mb-4 section-title">Configuración</h2>
+            <div class="mb-4 mt-6">
+                <label for="apiKey" class="block text-sm font-medium mb-2">API Key de OpenAI</label>
+                <div class="flex">
+                    <input type="password" id="apiKey" class="custom-input rounded-l-md w-full p-3" placeholder="sk-...">
+                    <button id="saveKey" class="btn-gold rounded-r-md px-4">Guardar</button>
+                </div>
+                <div class="flex items-center mt-2">
+                    <input type="checkbox" id="rememberKey" class="mr-2">
+                    <label for="rememberKey" class="text-sm">Recordar en este dispositivo</label>
+                </div>
+                <p class="text-xs text-gray-500 mt-2">Tu API Key nunca se envía a nuestros servidores. Solo se utiliza para hacer llamadas directas a OpenAI.</p>
+            </div>
+        </div>
+
+        <!-- Image Input Section -->
+        <div class="mb-12 bg-white rounded-lg p-6 shadow-md">
+            <h2 class="text-2xl font-semibold mb-4 section-title">Imágenes de la Antigüedad</h2>
+            <div class="mb-4 mt-6">
+                <label for="imageUrl" class="block text-sm font-medium mb-2">URL de la imagen</label>
+                <div class="flex">
+                    <input type="text" id="imageUrl" class="custom-input rounded-l-md w-full p-3" placeholder="https://ejemplo.com/imagen.jpg">
+                    <button id="addUrl" class="btn-gold rounded-r-md px-4">Añadir</button>
+                </div>
+                <p class="text-xs text-gray-500 mt-2">Puedes añadir múltiples imágenes. El sistema seleccionará la más adecuada para el análisis.</p>
+            </div>
+            
+            <div id="urlListContainer" class="mt-4 hidden">
+                <h4 class="text-sm font-medium mb-2">Imágenes añadidas:</h4>
+                <div id="urlList" class="url-list"></div>
+            </div>
+            
+            <div class="mt-6">
+                <button id="analyzeBtn" class="btn-gold rounded-md px-6 py-3 w-full md:w-auto">Analizar Antigüedad</button>
+            </div>
+        </div>
+
+        <!-- Results Section -->
+        <div id="resultsContainer" class="hidden">
+            <h2 class="text-3xl font-semibold mb-6 header-ornate text-center">Resultados del Análisis</h2>
+            
+            <!-- Tabs Navigation -->
+            <div class="flex border-b border-gold mb-6">
+                <button class="tab-btn active px-4 py-2 font-medium text-lg" data-tab="research">Investigación</button>
+                <button class="tab-btn px-4 py-2 font-medium text-lg" data-tab="woocommerce">WooCommerce</button>
+                <button class="tab-btn px-4 py-2 font-medium text-lg" data-tab="instagram">Instagram</button>
+            </div>
+            
+            <!-- Research Tab -->
+            <div id="researchTab" class="tab-content active">
+                <div class="mb-8">
+                    <div class="mb-4 flex justify-between items-center">
+                        <h3 class="text-xl font-semibold section-title">Descripción Inicial</h3>
+                        <button class="copy-btn" data-content="descripcionInicial">
+                            <i class="fas fa-copy mr-1"></i> Copiar
+                        </button>
+                    </div>
+                    <div id="descripcionInicial" class="result-section p-4 rounded-md mt-6"></div>
+                </div>
+                
+                <div class="mb-8">
+                    <div class="mb-4 flex justify-between items-center">
+                        <h3 class="text-xl font-semibold section-title">Origen</h3>
+                        <button class="copy-btn" data-content="origen">
+                            <i class="fas fa-copy mr-1"></i> Copiar
+                        </button>
+                    </div>
+                    <div id="origen" class="result-section p-4 rounded-md mt-6"></div>
+                </div>
+                
+                <div class="mb-8">
+                    <div class="mb-4 flex justify-between items-center">
+                        <h3 class="text-xl font-semibold section-title">Periodo</h3>
+                        <button class="copy-btn" data-content="periodo">
+                            <i class="fas fa-copy mr-1"></i> Copiar
+                        </button>
+                    </div>
+                    <div id="periodo" class="result-section p-4 rounded-md mt-6"></div>
+                </div>
+                
+                <div class="mb-8">
+                    <div class="mb-4 flex justify-between items-center">
+                        <h3 class="text-xl font-semibold section-title">Estilo</h3>
+                        <button class="copy-btn" data-content="estilo">
+                            <i class="fas fa-copy mr-1"></i> Copiar
+                        </button>
+                    </div>
+                    <div id="estilo" class="result-section p-4 rounded-md mt-6"></div>
+                </div>
+                
+                <div class="mb-8">
+                    <div class="mb-4 flex justify-between items-center">
+                        <h3 class="text-xl font-semibold section-title">Materiales y Técnicas</h3>
+                        <button class="copy-btn" data-content="materialesTecnicas">
+                            <i class="fas fa-copy mr-1"></i> Copiar
+                        </button>
+                    </div>
+                    <div id="materialesTecnicas" class="result-section p-4 rounded-md mt-6"></div>
+                </div>
+                
+                <div class="mb-8">
+                    <div class="mb-4 flex justify-between items-center">
+                        <h3 class="text-xl font-semibold section-title">Valor de Mercado</h3>
+                        <button class="copy-btn" data-content="valorMercado">
+                            <i class="fas fa-copy mr-1"></i> Copiar
+                        </button>
+                    </div>
+                    <div id="valorMercado" class="result-section p-4 rounded-md mt-6"></div>
+                </div>
+                
+                <div class="mb-8">
+                    <div class="mb-4 flex justify-between items-center">
+                        <h3 class="text-xl font-semibold section-title">Particularidades</h3>
+                        <button class="copy-btn" data-content="particularidades">
+                            <i class="fas fa-copy mr-1"></i> Copiar
+                        </button>
+                    </div>
+                    <div id="particularidades" class="result-section p-4 rounded-md mt-6"></div>
+                </div>
+                
+                <div class="mb-8">
+                    <div class="mb-4 flex justify-between items-center">
+                        <h3 class="text-xl font-semibold section-title">Fuentes</h3>
+                        <button class="copy-btn" data-content="fuentes">
+                            <i class="fas fa-copy mr-1"></i> Copiar
+                        </button>
+                    </div>
+                    <div id="fuentes" class="result-section p-4 rounded-md mt-6"></div>
+                </div>
+            </div>
+            
+            <!-- WooCommerce Tab -->
+            <div id="woocommerceTab" class="tab-content">
+                <div class="mb-8">
+                    <div class="mb-4 flex justify-between items-center">
+                        <h3 class="text-xl font-semibold section-title">Título del Producto</h3>
+                        <button class="copy-btn" data-content="wooTitulo">
+                            <i class="fas fa-copy mr-1"></i> Copiar
+                        </button>
+                    </div>
+                    <div id="wooTitulo" class="result-section p-4 rounded-md mt-6"></div>
+                </div>
+                
+                <div class="mb-8">
+                    <div class="mb-4 flex justify-between items-center">
+                        <h3 class="text-xl font-semibold section-title">Descripción Corta</h3>
+                        <button class="copy-btn" data-content="wooDescCorta">
+                            <i class="fas fa-copy mr-1"></i> Copiar
+                        </button>
+                    </div>
+                    <div id="wooDescCorta" class="result-section p-4 rounded-md mt-6"></div>
+                </div>
+                
+                <div class="mb-8">
+                    <div class="mb-4 flex justify-between items-center">
+                        <h3 class="text-xl font-semibold section-title">Descripción Completa (HTML)</h3>
+                        <button class="copy-btn" data-content="wooDescCompleta">
+                            <i class="fas fa-copy mr-1"></i> Copiar
+                        </button>
+                    </div>
+                    <div id="wooDescCompleta" class="result-section p-4 rounded-md mt-6 overflow-x-auto"></div>
+                </div>
+                
+                <div class="mb-8">
+                    <div class="mb-4 flex justify-between items-center">
+                        <h3 class="text-xl font-semibold section-title">Meta Descripción</h3>
+                        <button class="copy-btn" data-content="wooMetaDesc">
+                            <i class="fas fa-copy mr-1"></i> Copiar
+                        </button>
+                    </div>
+                    <div id="wooMetaDesc" class="result-section p-4 rounded-md mt-6"></div>
+                </div>
+                
+                <div class="mb-8">
+                    <div class="mb-4 flex justify-between items-center">
+                        <h3 class="text-xl font-semibold section-title">Categorías</h3>
+                        <button class="copy-btn" data-content="wooCategorias">
+                            <i class="fas fa-copy mr-1"></i> Copiar
+                        </button>
+                    </div>
+                    <div id="wooCategorias" class="result-section p-4 rounded-md mt-6"></div>
+                </div>
+                
+                <div class="mb-8">
+                    <div class="mb-4 flex justify-between items-center">
+                        <h3 class="text-xl font-semibold section-title">Etiquetas</h3>
+                        <button class="copy-btn" data-content="wooEtiquetas">
+                            <i class="fas fa-copy mr-1"></i> Copiar
+                        </button>
+                    </div>
+                    <div id="wooEtiquetas" class="result-section p-4 rounded-md mt-6"></div>
+                </div>
+            </div>
+            
+            <!-- Instagram Tab -->
+            <div id="instagramTab" class="tab-content">
+                <div class="mb-8">
+                    <div class="mb-4 flex justify-between items-center">
+                        <h3 class="text-xl font-semibold section-title">Texto Principal</h3>
+                        <button class="copy-btn" data-content="instaTexto">
+                            <i class="fas fa-copy mr-1"></i> Copiar
+                        </button>
+                    </div>
+                    <div id="instaTexto" class="result-section p-4 rounded-md mt-6"></div>
+                </div>
+                
+                <div class="mb-8">
+                    <div class="mb-4 flex justify-between items-center">
+                        <h3 class="text-xl font-semibold section-title">Hashtags</h3>
+                        <button class="copy-btn" data-content="instaHashtags">
+                            <i class="fas fa-copy mr-1"></i> Copiar
+                        </button>
+                    </div>
+                    <div id="instaHashtags" class="result-section p-4 rounded-md mt-6"></div>
+                </div>
+                
+                <div class="mb-8">
+                    <div class="mb-4 flex justify-between items-center">
+                        <h3 class="text-xl font-semibold section-title">Call to Action</h3>
+                        <button class="copy-btn" data-content="instaCta">
+                            <i class="fas fa-copy mr-1"></i> Copiar
+                        </button>
+                    </div>
+                    <div id="instaCta" class="result-section p-4 rounded-md mt-6"></div>
+                </div>
+                
+                <div class="mb-8">
+                    <div class="mb-4 flex justify-between items-center">
+                        <h3 class="text-xl font-semibold section-title">Post Completo</h3>
+                        <button class="copy-btn" data-content="instaCompleto">
+                            <i class="fas fa-copy mr-1"></i> Copiar
+                        </button>
+                    </div>
+                    <div id="instaCompleto" class="result-section p-4 rounded-md mt-6"></div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Footer -->
+        <footer class="mt-12 text-center text-sm text-gray-600">
+            <div class="ornament mb-4"></div>
+            <p>Palacio Santa Emilia © 2025 - Asistente de Antigüedades</p>
+            <p class="mt-2">Desarrollado para el análisis profesional de antigüedades y piezas históricas</p>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // DOM Elements
+            const apiKeyInput = document.getElementById('apiKey');
+            const saveKeyBtn = document.getElementById('saveKey');
+            const rememberKeyCheck = document.getElementById('rememberKey');
+            const imageUrlInput = document.getElementById('imageUrl');
+            const addUrlBtn = document.getElementById('addUrl');
+            const urlListContainer = document.getElementById('urlListContainer');
+            const urlList = document.getElementById('urlList');
+            const analyzeBtn = document.getElementById('analyzeBtn');
+            const loadingOverlay = document.getElementById('loadingOverlay');
+            const resultsContainer = document.getElementById('resultsContainer');
+            const tabButtons = document.querySelectorAll('.tab-btn');
+            const tabContents = document.querySelectorAll('.tab-content');
+            const copyButtons = document.querySelectorAll('.copy-btn');
+            
+            // Variables
+            let imageUrls = [];
+            let apiKey = '';
+            
+            // Check for saved API key
+            if (localStorage.getItem('santaEmiliaApiKey')) {
+                apiKeyInput.value = localStorage.getItem('santaEmiliaApiKey');
+                rememberKeyCheck.checked = true;
+                apiKey = apiKeyInput.value;
+            }
+            
+            // Event Listeners
+            saveKeyBtn.addEventListener('click', saveApiKey);
+            addUrlBtn.addEventListener('click', addImageUrl);
+            analyzeBtn.addEventListener('click', analyzeAntique);
+            
+            // Tab switching
+            tabButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const tabId = button.getAttribute('data-tab');
+                    
+                    // Remove active class from all buttons and tabs
+                    tabButtons.forEach(btn => btn.classList.remove('active'));
+                    tabContents.forEach(content => content.classList.remove('active'));
+                    
+                    // Add active class to current button and tab
+                    button.classList.add('active');
+                    document.getElementById(`${tabId}Tab`).classList.add('active');
+                });
+            });
+            
+            // Copy functionality
+            copyButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const contentId = button.getAttribute('data-content');
+                    const content = document.getElementById(contentId).innerText;
+                    
+                    navigator.clipboard.writeText(content).then(() => {
+                        const originalText = button.innerHTML;
+                        button.innerHTML = '<i class="fas fa-check mr-1"></i> Copiado';
+                        
+                        setTimeout(() => {
+                            button.innerHTML = originalText;
+                        }, 2000);
+                    }).catch(err => {
+                        console.error('Error al copiar texto: ', err);
+                    });
+                });
+            });
+            
+            // Functions
+            function saveApiKey() {
+                apiKey = apiKeyInput.value.trim();
+                
+                if (!apiKey) {
+                    alert('Por favor, introduce una API Key válida');
+                    return;
+                }
+                
+                if (rememberKeyCheck.checked) {
+                    localStorage.setItem('santaEmiliaApiKey', apiKey);
+                } else {
+                    localStorage.removeItem('santaEmiliaApiKey');
+                }
+                
+                alert('API Key guardada correctamente');
+            }
+            
+            function addImageUrl() {
+                const url = imageUrlInput.value.trim();
+                
+                if (!url) {
+                    alert('Por favor, introduce una URL válida');
+                    return;
+                }
+                
+                if (!url.startsWith('http')) {
+                    alert('Por favor, introduce una URL válida que comience con http:// o https://');
+                    return;
+                }
+                
+                if (imageUrls.includes(url)) {
+                    alert('Esta URL ya ha sido añadida');
+                    return;
+                }
+                
+                imageUrls.push(url);
+                imageUrlInput.value = '';
+                updateUrlList();
+                urlListContainer.classList.remove('hidden');
+            }
+            
+            function updateUrlList() {
+                urlList.innerHTML = '';
+                
+                imageUrls.forEach((url, index) => {
+                    const item = document.createElement('div');
+                    item.className = 'url-item';
+                    
+                    const urlText = document.createElement('div');
+                    urlText.className = 'truncate';
+                    urlText.textContent = url;
+                    
+                    const removeButton = document.createElement('button');
+                    removeButton.innerHTML = '<i class="fas fa-times"></i>';
+                    removeButton.className = 'text-red-500 hover:text-red-700';
+                    removeButton.addEventListener('click', () => {
+                        imageUrls.splice(index, 1);
+                        updateUrlList();
+                        
+                        if (imageUrls.length === 0) {
+                            urlListContainer.classList.add('hidden');
+                        }
+                    });
+                    
+                    item.appendChild(urlText);
+                    item.appendChild(removeButton);
+                    urlList.appendChild(item);
+                });
+            }
+            
+            async function analyzeAntique() {
+                if (!apiKey) {
+                    alert('Por favor, introduce y guarda tu API Key de OpenAI primero');
+                    return;
+                }
+                
+                if (imageUrls.length === 0) {
+                    alert('Por favor, añade al menos una URL de imagen');
+                    return;
+                }
+                
+                // Show loading overlay
+                loadingOverlay.classList.remove('hidden');
+                
+                try {
+                    // Step 1: Select the best image if there are multiple
+                    let bestImageUrl = imageUrls[0];
+                    
+                    if (imageUrls.length > 1) {
+                        bestImageUrl = await selectBestImage(imageUrls);
+                    }
+                    
+                    // Step 2: Analyze the image
+                    const initialDescription = await analyzeImage(bestImageUrl);
+                    
+                    // Step 3: Conduct deep research
+                    const researchData = await conductResearch(initialDescription);
+                    
+                    // Step 4: Generate WooCommerce content
+                    const wooData = await generateWoocommerceContent(researchData);
+                    
+                    // Step 5: Generate Instagram content
+                    const instaData = await generateInstagramContent(researchData);
+                    
+                    // Display results
+                    displayResults({
+                        research: {
+                            descripcionInicial: initialDescription,
+                            ...researchData
+                        },
+                        woocommerce: wooData,
+                        instagram: instaData
+                    });
+                    
+                    // Show results container
+                    resultsContainer.classList.remove('hidden');
+                    
+                    // Scroll to results
+                    resultsContainer.scrollIntoView({ behavior: 'smooth' });
+                } catch (error) {
+                    console.error('Error:', error);
+                    alert(`Error durante el análisis: ${error.message}`);
+                } finally {
+                    // Hide loading overlay
+                    loadingOverlay.classList.add('hidden');
+                }
+            }
+            
+            async function selectBestImage(urls) {
+                console.log('Selecting best image from multiple URLs...');
+                
+                try {
+                    const imageContent = [];
+                    
+                    urls.forEach((url, index) => {
+                        imageContent.push({
+                            type: "text",
+                            text: `Imagen ${index+1}:`
+                        });
+                        
+                        imageContent.push({
+                            type: "image_url",
+                            image_url: { url }
+                        });
+                    });
+                    
+                    const messages = [
+                        {
+                            role: "system",
+                            content: "Eres un experto en fotografía y antigüedades. Tu tarea es analizar varias fotografías de la misma pieza y determinar cuál es la mejor para un análisis detallado, considerando claridad, iluminación, ángulo, detalle visible y representatividad de la pieza."
+                        },
+                        {
+                            role: "user",
+                            content: [
+                                ...imageContent,
+                                {
+                                    type: "text",
+                                    text: "De las imágenes mostradas, indica cuál es la mejor para analizar detalladamente esta antigüedad. Responde solo con el número de la imagen seleccionada, por ejemplo: 'Imagen 2'."
+                                }
+                            ]
+                        }
+                    ];
+                    
+                    const response = await callOpenAIAPI(messages);
+                    
+                    // Extract image number from response
+                    for (let i = 1; i <= urls.length; i++) {
+                        if (response.includes(`Imagen ${i}`) || response.includes(`imagen ${i}`)) {
+                            console.log(`Selected image ${i} as the best`);
+                            return urls[i-1];
+                        }
+                    }
+                    
+                    // Default to first image if no clear selection
+                    console.log('Could not determine best image, using the first one');
+                    return urls[0];
+                } catch (error) {
+                    console.error('Error selecting best image:', error);
+                    return urls[0]; // Default to first image in case of error
+                }
+            }
+            
+            async function analyzeImage(imageUrl) {
+                console.log('Analyzing image...');
+                
+                const messages = [
+                    {
+                        role: "system",
+                        content: "Eres un experto tasador y catalogador de antigüedades con amplios conocimientos de historia del arte, estilos decorativos y mobiliario histórico. Observa cuidadosamente los detalles y proporciona un análisis completo."
+                    },
+                    {
+                        role: "user",
+                        content: [
+                            {
+                                type: "text",
+                                text: "Describe detalladamente esta pieza antigua. Identifica qué es, de qué época parece ser, materiales, técnicas utilizadas, estilo artístico y cualquier detalle distintivo que observes."
+                            },
+                            {
+                                type: "image_url",
+                                image_url: { url: imageUrl }
+                            }
+                        ]
+                    }
+                ];
+                
+                return await callOpenAIAPI(messages);
+            }
+            
+            async function conductResearch(initialDescription) {
+                console.log('Conducting deep research...');
+                
+                // First, get the detailed research
+                const researchMessages = [
+                    {
+                        role: "system",
+                        content: "Eres un experto en antigüedades con acceso a bases de datos especializadas, catálogos de subastas y literatura académica. Realiza una investigación exhaustiva sobre esta pieza y proporciona información verificable con fuentes. Para cada afirmación importante, cita una fuente real y específica (casas de subastas, museos, catálogos, libros académicos)."
+                    },
+                    {
+                        role: "user",
+                        content: `Basándote en esta descripción, realiza una investigación profunda de la pieza: ${initialDescription}
+                        
+                        Proporciona la siguiente información:
+                        1. ORIGEN: Lugar, taller o fabricante probable, contexto histórico-cultural
+                        2. PERIODO: Época exacta o aproximada de fabricación con justificación
+                        3. ESTILO: Clasificación estilística, características distintivas, contexto artístico
+                        4. MATERIALES Y TÉCNICAS: Análisis detallado de materiales, métodos de fabricación
+                        5. VALOR DE MERCADO: Rango de precios actual con ejemplos de piezas similares en subastas o ventas recientes
+                        6. PARTICULARIDADES: Elementos distintivos, rareza, estado de conservación
+                        
+                        Cada sección debe incluir al menos una fuente citada específica (nombre de casa de subastas, título de libro, nombre de museo, catálogo específico, etc.). Las fuentes deben ser reales, verificables y relevantes para el tipo de pieza.`
+                    }
+                ];
+                
+                const researchResponse = await callOpenAIAPI(researchMessages);
+                
+                // Then, structure it into JSON format
+                const structureMessages = [
+                    {
+                        role: "system",
+                        content: "Tu tarea es estructurar información detallada sobre antigüedades en formato JSON para uso técnico."
+                    },
+                    {
+                        role: "user",
+                        content: `Convierte esta investigación sobre una antigüedad a formato JSON estructurado:
+                        
+                        ${researchResponse}
+                        
+                        El JSON debe tener estas claves exactas:
+                        - origen
+                        - periodo
+                        - estilo
+                        - materiales_tecnicas
+                        - valor_mercado
+                        - particularidades
+                        - fuentes (array de fuentes citadas)
+                        
+                        Asegúrate de mantener todas las fuentes citadas y los detalles importantes. La respuesta debe ser SOLO el JSON válido, sin explicaciones adicionales.`
+                    }
+                ];
+                
+                const jsonResponse = await callOpenAIAPI(structureMessages);
+                
+                try {
+                    // Extract JSON from the response
+                    const jsonMatch = jsonResponse.match(/\{[\s\S]*\}/);
+                    if (jsonMatch) {
+                        return JSON.parse(jsonMatch[0]);
+                    }
+                    
+                    // If no JSON found, return a formatted object with the full response
+                    return {
+                        origen: "Error al procesar el formato JSON",
+                        periodo: "Error al procesar el formato JSON",
+                        estilo: "Error al procesar el formato JSON",
+                        materiales_tecnicas: "Error al procesar el formato JSON",
+                        valor_mercado: "Error al procesar el formato JSON",
+                        particularidades: "Error al procesar el formato JSON",
+                        fuentes: ["Error al procesar el formato JSON"],
+                        investigacion_completa: researchResponse
+                    };
+                } catch (error) {
+                    console.error('Error parsing JSON response:', error);
+                    
+                    // Return a formatted object with the full response
+                    return {
+                        origen: "Error al procesar el formato JSON",
+                        periodo: "Error al procesar el formato JSON",
+                        estilo: "Error al procesar el formato JSON",
+                        materiales_tecnicas: "Error al procesar el formato JSON",
+                        valor_mercado: "Error al procesar el formato JSON",
+                        particularidades: "Error al procesar el formato JSON",
+                        fuentes: ["Error al procesar el formato JSON"],
+                        investigacion_completa: researchResponse
+                    };
+                }
+            }
+            
+            async function generateWoocommerceContent(researchData) {
+                console.log('Generating WooCommerce content...');
+                
+                const messages = [
+                    {
+                        role: "system",
+                        content: "Eres un especialista en marketing de antigüedades y e-commerce. Tu tarea es crear descripciones completas y atractivas para productos de alta gama en una tienda WooCommerce, manteniendo rigor histórico y técnico pero con un enfoque comercial. La descripción debe ser sofisticada y atractiva para coleccionistas y amantes de las antigüedades."
+                    },
+                    {
+                        role: "user",
+                        content: `Crea una descripción completa para WooCommerce de esta antigüedad basada en la siguiente información:
+                        
+                        ${JSON.stringify(researchData, null, 2)}
+                        
+                        Necesito estos elementos:
+                        1. TÍTULO DEL PRODUCTO: Nombre comercial atractivo pero técnicamente preciso (máx 70 caracteres)
+                        2. DESCRIPCIÓN CORTA: Resumen conciso y elegante (2-3 frases)
+                        3. DESCRIPCIÓN COMPLETA: Descripción detallada en HTML con formato profesional
+                           - Debe incluir todos los detalles técnicos (origen, periodo, estilo, materiales)
+                           - Debe mencionar el valor e importancia de la pieza
+                           - Debe tener párrafos bien estructurados con subtítulos en <h3>
+                           - Debe incluir al final una sección de procedencia/autenticación
+                        4. META DESCRIPCIÓN: Texto SEO optimizado (máx 160 caracteres)
+                        5. CATEGORÍAS: Sugerencia de categorías para la tienda (3-5)
+                        6. ETIQUETAS: Keywords relevantes para búsquedas (8-10)
+                        
+                        Estructura tu respuesta en formato JSON con las claves: titulo, descripcion_corta, descripcion_completa, meta_descripcion, categorias, etiquetas.`
+                    }
+                ];
+                
+                const response = await callOpenAIAPI(messages);
+                
+                try {
+                    // Extract JSON from the response
+                    const jsonMatch = response.match(/\{[\s\S]*\}/);
+                    if (jsonMatch) {
+                        return JSON.parse(jsonMatch[0]);
+                    }
+                    
+                    // If no JSON found, return a formatted object with the full response
+                    return {
+                        titulo: "Error al procesar el formato JSON",
+                        descripcion_corta: "Error al procesar el formato JSON",
+                        descripcion_completa: "Error al procesar el formato JSON",
+                        meta_descripcion: "Error al procesar el formato JSON",
+                        categorias: "Error al procesar el formato JSON",
+                        etiquetas: "Error al procesar el formato JSON",
+                        respuesta_completa: response
+                    };
+                } catch (error) {
+                    console.error('Error parsing JSON response:', error);
+                    
+                    // Return a formatted object with the full response
+                    return {
+                        titulo: "Error al procesar el formato JSON",
+                        descripcion_corta: "Error al procesar el formato JSON",
+                        descripcion_completa: "Error al procesar el formato JSON",
+                        meta_descripcion: "Error al procesar el formato JSON",
+                        categorias: "Error al procesar el formato JSON",
+                        etiquetas: "Error al procesar el formato JSON",
+                        respuesta_completa: response
+                    };
+                }
+            }
+            
+            async function generateInstagramContent(researchData) {
+                console.log('Generating Instagram content...');
+                
+                const messages = [
+                    {
+                        role: "system",
+                        content: "Eres un especialista en marketing digital para antigüedades y arte de lujo. Tu objetivo es crear posts cautivadores para Instagram que comuniquen elegancia, exclusividad y conocimiento. El tono debe ser sofisticado y atractivo para un público de alto poder adquisitivo."
+                    },
+                    {
+                        role: "user",
+                        content: `Crea un post para Instagram sobre esta antigüedad:
+                        
+                        ${JSON.stringify(researchData, null, 2)}
+                        
+                        El post debe incluir:
+                        1. TEXTO PRINCIPAL: Texto cautivador y elegante (máximo 100 palabras)
+                           - Debe destacar lo más interesante y valioso de la pieza
+                           - Debe mencionar que está disponible en Santa Emilia
+                           - Debe tener un tono exclusivo y sofisticado
+                        2. HASHTAGS: 8-12 hashtags relevantes y efectivos
+                        3. CALL TO ACTION: Invitación elegante a visitar o contactar
+                        
+                        Estructura tu respuesta en formato JSON con las claves: texto_principal, hashtags, call_to_action`
+                    }
+                ];
+                
+                const response = await callOpenAIAPI(messages);
+                
+                try {
+                    // Extract JSON from the response
+                    const jsonMatch = response.match(/\{[\s\S]*\}/);
+                    if (jsonMatch) {
+                        const data = JSON.parse(jsonMatch[0]);
+                        
+                        // Create complete Instagram post
+                        if (data.texto_principal && data.hashtags && data.call_to_action) {
+                            let hashtags = Array.isArray(data.hashtags) ? data.hashtags.join(' ') : data.hashtags;
+                            data.post_completo = `${data.texto_principal}\n\n${data.call_to_action}\n\n${hashtags}`;
+                        } else {
+                            data.post_completo = "Error al generar el post completo";
+                        }
+                        
+                        return data;
+                    }
+                    
+                    // If no JSON found, return a formatted object with the full response
+                    return {
+                        texto_principal: "Error al procesar el formato JSON",
+                        hashtags: "Error al procesar el formato JSON",
+                        call_to_action: "Error al procesar el formato JSON",
+                        post_completo: "Error al procesar el formato JSON",
+                        respuesta_completa: response
+                    };
+                } catch (error) {
+                    console.error('Error parsing JSON response:', error);
+                    
+                    // Return a formatted object with the full response
+                    return {
+                        texto_principal: "Error al procesar el formato JSON",
+                        hashtags: "Error al procesar el formato JSON",
+                        call_to_action: "Error al procesar el formato JSON",
+                        post_completo: "Error al procesar el formato JSON",
+                        respuesta_completa: response
+                    };
+                }
+            }
+            
+            async function callOpenAIAPI(messages) {
+                const url = 'https://api.openai.com/v1/chat/completions';
+                const headers = {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${apiKey}`
+                };
+                const data = {
+                    model: 'gpt-4o',
+                    messages: messages,
+                    temperature: 0.7
+                };
+                
+                try {
+                    const response = await fetch(url, {
+                        method: 'POST',
+                        headers: headers,
+                        body: JSON.stringify(data)
+                    });
+                    
+                    if (!response.ok) {
+                        const errorData = await response.json();
+                        throw new Error(`API Error: ${errorData.error?.message || 'Unknown error'}`);
+                    }
+                    
+                    const result = await response.json();
+                    return result.choices[0].message.content;
+                } catch (error) {
+                    console.error('Error calling OpenAI API:', error);
+                    throw error;
+                }
+            }
+            
+            function displayResults(data) {
+                console.log('Displaying results:', data);
+                
+                // Research tab
+                document.getElementById('descripcionInicial').textContent = data.research.descripcionInicial || 'No disponible';
+                document.getElementById('origen').textContent = data.research.origen || 'No disponible';
+                document.getElementById('periodo').textContent = data.research.periodo || 'No disponible';
+                document.getElementById('estilo').textContent = data.research.estilo || 'No disponible';
+                document.getElementById('materialesTecnicas').textContent = data.research.materiales_tecnicas || 'No disponible';
+                document.getElementById('valorMercado').textContent = data.research.valor_mercado || 'No disponible';
+                document.getElementById('particularidades').textContent = data.research.particularidades || 'No disponible';
+                
+                // Format sources as a list if it's an array
+                const fuentes = document.getElementById('fuentes');
+                if (Array.isArray(data.research.fuentes)) {
+                    fuentes.innerHTML = data.research.fuentes.map((source, index) => `${index + 1}. ${source}`).join('<br>');
+                } else {
+                    fuentes.textContent = data.research.fuentes || 'No disponible';
+                }
+                
+                // WooCommerce tab
+                document.getElementById('wooTitulo').textContent = data.woocommerce.titulo || 'No disponible';
+                document.getElementById('wooDescCorta').textContent = data.woocommerce.descripcion_corta || 'No disponible';
+                document.getElementById('wooDescCompleta').innerHTML = data.woocommerce.descripcion_completa || 'No disponible';
+                document.getElementById('wooMetaDesc').textContent = data.woocommerce.meta_descripcion || 'No disponible';
+                
+                // Format categories and tags as lists if they're arrays
+                const wooCategorias = document.getElementById('wooCategorias');
+                if (Array.isArray(data.woocommerce.categorias)) {
+                    wooCategorias.innerHTML = data.woocommerce.categorias.map(cat => `• ${cat}`).join('<br>');
+                } else {
+                    wooCategorias.textContent = data.woocommerce.categorias || 'No disponible';
+                }
+                
+                const wooEtiquetas = document.getElementById('wooEtiquetas');
+                if (Array.isArray(data.woocommerce.etiquetas)) {
+                    wooEtiquetas.textContent = data.woocommerce.etiquetas.join(', ');
+                } else {
+                    wooEtiquetas.textContent = data.woocommerce.etiquetas || 'No disponible';
+                }
+                
+                // Instagram tab
+                document.getElementById('instaTexto').textContent = data.instagram.texto_principal || 'No disponible';
+                
+                const instaHashtags = document.getElementById('instaHashtags');
+                if (Array.isArray(data.instagram.hashtags)) {
+                    instaHashtags.textContent = data.instagram.hashtags.join(' ');
+                } else {
+                    instaHashtags.textContent = data.instagram.hashtags || 'No disponible';
+                }
+                
+                document.getElementById('instaCta').textContent = data.instagram.call_to_action || 'No disponible';
+                document.getElementById('instaCompleto').textContent = data.instagram.post_completo || 'No disponible';
+            }
+        });
+    </script>
+</body>
+</html>
