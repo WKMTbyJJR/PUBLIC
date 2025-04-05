@@ -3,795 +3,1085 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Asistente de Antigüedades | Santa Emilia</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
+    <title>Santa Emilia - Asistente de Antigüedades</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Raleway:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
         :root {
-            --gold: #c6a664;
-            --dark-gold: #a28d50;
-            --cream: #f8f5e9;
-            --dark-brown: #3c2415;
-            --light-brown: #8b6c5c;
+            --primary: #8B734B;
+            --primary-dark: #6A5838;
+            --secondary: #28231D;
+            --accent: #D4B88E;
+            --light: #F5F0E6;
+            --dark: #1A1814;
         }
         
         body {
-            font-family: 'Raleway', sans-serif;
-            background-color: var(--cream);
-            color: var(--dark-brown);
+            font-family: 'Cormorant Garamond', Georgia, serif;
+            background-color: var(--light);
+            color: var(--dark);
         }
         
-        h1, h2, h3, h4, h5, h6 {
-            font-family: 'Playfair Display', serif;
-        }
-        
-        .gold-text {
-            color: var(--gold);
-        }
-        
-        .gold-bg {
-            background-color: var(--gold);
-        }
-        
-        .dark-gold-bg {
-            background-color: var(--dark-gold);
-        }
-        
-        .cream-bg {
-            background-color: var(--cream);
-        }
-        
-        .dark-brown-bg {
-            background-color: var(--dark-brown);
-        }
-        
-        .border-gold {
-            border-color: var(--gold);
-        }
-        
-        .btn-gold {
-            background-color: var(--gold);
+        .btn-primary {
+            background-color: var(--primary);
+            border-color: var(--primary-dark);
             color: white;
             transition: all 0.3s ease;
         }
         
-        .btn-gold:hover {
-            background-color: var(--dark-gold);
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
         }
         
-        .custom-input {
-            border: 1px solid var(--light-brown);
-            background-color: rgba(255, 255, 255, 0.9);
+        .btn-secondary {
+            background-color: var(--secondary);
+            border-color: var(--dark);
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background-color: var(--dark);
+        }
+        
+        .text-primary {
+            color: var(--primary);
+        }
+        
+        .bg-primary {
+            background-color: var(--primary);
+        }
+        
+        .border-primary {
+            border-color: var(--primary);
+        }
+        
+        .heading-font {
+            font-family: 'Cormorant Garamond', Georgia, serif;
+        }
+        
+        .divider {
+            height: 1px;
+            background: linear-gradient(to right, transparent, var(--primary), transparent);
+            margin: 2rem 0;
+        }
+        
+        .bg-light {
+            background-color: var(--light);
+        }
+        
+        .card {
+            background-color: white;
+            border: 1px solid #E0D6C2;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
             transition: all 0.3s ease;
         }
         
-        .custom-input:focus {
-            border-color: var(--gold);
-            box-shadow: 0 0 0 2px rgba(198, 166, 100, 0.2);
+        .card:hover {
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
         }
         
-        .result-section {
-            border-left: 4px solid var(--gold);
+        .loader {
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid var(--primary);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .progress-step {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.5s ease;
+        }
+        
+        .progress-step.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .stats-card {
             background-color: white;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            border-left: 4px solid var(--primary);
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            padding: 1rem;
+            transition: all 0.3s ease;
         }
         
-        .ornament {
+        .stats-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+        
+        .chart-container {
             position: relative;
-        }
-        
-        .ornament:before, .ornament:after {
-            content: "❦";
-            font-size: 1.5rem;
-            color: var(--gold);
-            margin: 0 15px;
-            opacity: 0.8;
-        }
-        
-        .header-ornate {
-            position: relative;
-        }
-        
-        .header-ornate:after {
-            content: "";
-            display: block;
-            width: 100px;
-            height: 2px;
-            background-color: var(--gold);
-            margin: 10px auto 30px;
-        }
-        
-        .section-title {
-            position: relative;
-            display: inline-block;
-        }
-        
-        .section-title:after {
-            content: "";
-            position: absolute;
-            bottom: -8px;
-            left: 0;
+            height: 300px;
             width: 100%;
-            height: 2px;
-            background-color: var(--gold);
         }
         
-        #loadingOverlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(60, 36, 21, 0.7);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
+        .vintage-input {
+            background-color: rgba(255, 255, 255, 0.9);
+            border: 1px solid #D4B88E;
+            border-radius: 4px;
+            padding: 0.5rem 1rem;
+            font-family: 'Cormorant Garamond', Georgia, serif;
+            color: var(--dark);
         }
         
-        .spinner {
-            width: 70px;
-            text-align: center;
+        .vintage-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(139, 115, 75, 0.2);
         }
         
-        .spinner > div {
-            width: 14px;
-            height: 14px;
-            background-color: var(--gold);
-            border-radius: 100%;
-            display: inline-block;
-            animation: sk-bouncedelay 1.4s infinite ease-in-out both;
+        .antique-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
         }
         
-        .spinner .bounce1 {
-            animation-delay: -0.32s;
-        }
-        
-        .spinner .bounce2 {
-            animation-delay: -0.16s;
-        }
-        
-        @keyframes sk-bouncedelay {
-            0%, 80%, 100% { 
-                transform: scale(0);
-            } 40% { 
-                transform: scale(1.0);
+        @media (max-width: 768px) {
+            .antique-grid {
+                grid-template-columns: 1fr;
             }
         }
         
-        .url-list {
-            max-height: 200px;
-            overflow-y: auto;
-            border: 1px solid var(--light-brown);
-            border-radius: 0.375rem;
+        .bg-pattern {
+            background-color: #f9f5f0;
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23d4b88e' fill-opacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
         }
         
-        .url-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0.5rem 1rem;
-            border-bottom: 1px solid rgba(139, 108, 92, 0.2);
+        .monogram {
+            font-family: 'Cormorant Garamond', Georgia, serif;
+            font-weight: bold;
+            font-size: 2.5rem;
+            color: var(--primary);
         }
         
-        .url-item:last-child {
-            border-bottom: none;
-        }
-        
-        .copy-btn {
-            background-color: transparent;
-            color: var(--gold);
-            border: none;
+        .vintage-tab {
             cursor: pointer;
-            transition: color 0.3s ease;
-        }
-        
-        .copy-btn:hover {
-            color: var(--dark-gold);
-        }
-        
-        .tab-content {
-            display: none;
-        }
-        
-        .tab-content.active {
-            display: block;
-        }
-        
-        .tab-btn {
+            padding: 0.5rem 1rem;
             border-bottom: 2px solid transparent;
             transition: all 0.3s ease;
         }
         
-        .tab-btn.active {
-            border-bottom: 2px solid var(--gold);
-            color: var(--gold);
+        .vintage-tab.active {
+            border-bottom: 2px solid var(--primary);
+            color: var(--primary);
+            font-weight: bold;
+        }
+        
+        .vintage-tab:hover:not(.active) {
+            border-bottom: 2px solid var(--accent);
+            color: var(--primary-dark);
         }
     </style>
 </head>
-<body>
-    <div id="loadingOverlay" class="hidden">
-        <div class="text-center">
-            <div class="spinner">
-                <div class="bounce1"></div>
-                <div class="bounce2"></div>
-                <div class="bounce3"></div>
+<body class="min-h-screen bg-pattern">
+    <!-- API Key Modal -->
+    <div id="apiKeyModal" class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-70">
+        <div class="bg-white p-8 rounded-lg shadow-xl max-w-md w-full relative">
+            <div class="monogram text-center mb-4">SE</div>
+            <h2 class="text-2xl text-center font-bold mb-6 heading-font">Santa Emilia</h2>
+            <p class="mb-6 text-center">Para comenzar a utilizar el Asistente de Antigüedades, por favor ingresa tu clave API de OpenAI.</p>
+            
+            <div class="mb-4">
+                <label for="apiKey" class="block text-sm font-medium text-gray-700 mb-1">API Key de OpenAI</label>
+                <input type="password" id="apiKey" class="vintage-input w-full" placeholder="sk-...">
+                <p class="text-xs text-gray-500 mt-1">Tu clave API se almacenará localmente en tu navegador y nunca se enviará a ningún servidor externo.</p>
             </div>
-            <p class="mt-4 text-white font-semibold">Analizando antigüedad...</p>
-            <p class="text-white text-sm mt-1">Este proceso puede tardar hasta un minuto</p>
+            
+            <div class="flex justify-center">
+                <button id="saveApiKey" class="btn-primary px-6 py-2 rounded font-medium">
+                    Comenzar
+                </button>
+            </div>
         </div>
     </div>
-
-    <div class="container mx-auto px-4 py-8">
+    
+    <!-- Main App Container -->
+    <div id="appContainer" class="container mx-auto px-4 py-8 hidden">
         <!-- Header -->
-        <header class="text-center mb-12">
-            <h1 class="text-4xl md:text-5xl font-bold gold-text header-ornate">Palacio Santa Emilia</h1>
-            <p class="text-xl mt-2 text-light-brown">Asistente de Análisis de Antigüedades</p>
-            <div class="ornament mt-4"></div>
+        <header class="flex flex-col md:flex-row justify-between items-center mb-8">
+            <div class="flex items-center mb-4 md:mb-0">
+                <div class="monogram mr-4">SE</div>
+                <div>
+                    <h1 class="text-3xl font-bold heading-font">Santa Emilia</h1>
+                    <p class="text-sm text-gray-600">Asistente de Antigüedades</p>
+                </div>
+            </div>
+            <div class="flex items-center">
+                <button id="configBtn" class="text-gray-600 hover:text-primary mr-4" title="Configuración">
+                    <i class="fas fa-cog"></i>
+                </button>
+                <button id="exportBtn" class="text-gray-600 hover:text-primary mr-4" title="Exportar Base de Datos">
+                    <i class="fas fa-download"></i>
+                </button>
+                <button id="importBtn" class="text-gray-600 hover:text-primary" title="Importar Base de Datos">
+                    <i class="fas fa-upload"></i>
+                </button>
+                <input type="file" id="importFile" class="hidden" accept=".json">
+            </div>
         </header>
-
-        <!-- API Key Section -->
-        <div class="mb-12 bg-white rounded-lg p-6 shadow-md">
-            <h2 class="text-2xl font-semibold mb-4 section-title">Configuración</h2>
-            <div class="mb-4 mt-6">
-                <label for="apiKey" class="block text-sm font-medium mb-2">API Key de OpenAI</label>
-                <div class="flex">
-                    <input type="password" id="apiKey" class="custom-input rounded-l-md w-full p-3" placeholder="sk-...">
-                    <button id="saveKey" class="btn-gold rounded-r-md px-4">Guardar</button>
-                </div>
-                <div class="flex items-center mt-2">
-                    <input type="checkbox" id="rememberKey" class="mr-2">
-                    <label for="rememberKey" class="text-sm">Recordar en este dispositivo</label>
-                </div>
-                <p class="text-xs text-gray-500 mt-2">Tu API Key nunca se envía a nuestros servidores. Solo se utiliza para hacer llamadas directas a OpenAI.</p>
+        
+        <!-- Navigation Tabs -->
+        <div class="flex border-b border-gray-200 mb-8">
+            <div id="analysisTab" class="vintage-tab active">
+                Análisis de Antigüedades
+            </div>
+            <div id="portfolioTab" class="vintage-tab">
+                Portfolio
             </div>
         </div>
-
-        <!-- Image Input Section -->
-        <div class="mb-12 bg-white rounded-lg p-6 shadow-md">
-            <h2 class="text-2xl font-semibold mb-4 section-title">Imágenes de la Antigüedad</h2>
-            <div class="mb-4 mt-6">
-                <label for="imageUrl" class="block text-sm font-medium mb-2">URL de la imagen</label>
-                <div class="flex">
-                    <input type="text" id="imageUrl" class="custom-input rounded-l-md w-full p-3" placeholder="https://ejemplo.com/imagen.jpg">
-                    <button id="addUrl" class="btn-gold rounded-r-md px-4">Añadir</button>
-                </div>
-                <p class="text-xs text-gray-500 mt-2">Puedes añadir múltiples imágenes. El sistema seleccionará la más adecuada para el análisis.</p>
-            </div>
-            
-            <div id="urlListContainer" class="mt-4 hidden">
-                <h4 class="text-sm font-medium mb-2">Imágenes añadidas:</h4>
-                <div id="urlList" class="url-list"></div>
-            </div>
-            
-            <div class="mt-6">
-                <button id="analyzeBtn" class="btn-gold rounded-md px-6 py-3 w-full md:w-auto">Analizar Antigüedad</button>
-            </div>
-        </div>
-
-        <!-- Results Section -->
-        <div id="resultsContainer" class="hidden">
-            <h2 class="text-3xl font-semibold mb-6 header-ornate text-center">Resultados del Análisis</h2>
-            
-            <!-- Tabs Navigation -->
-            <div class="flex border-b border-gold mb-6">
-                <button class="tab-btn active px-4 py-2 font-medium text-lg" data-tab="research">Investigación</button>
-                <button class="tab-btn px-4 py-2 font-medium text-lg" data-tab="woocommerce">WooCommerce</button>
-                <button class="tab-btn px-4 py-2 font-medium text-lg" data-tab="instagram">Instagram</button>
-            </div>
-            
-            <!-- Research Tab -->
-            <div id="researchTab" class="tab-content active">
-                <div class="mb-8">
-                    <div class="mb-4 flex justify-between items-center">
-                        <h3 class="text-xl font-semibold section-title">Descripción Inicial</h3>
-                        <button class="copy-btn" data-content="descripcionInicial">
-                            <i class="fas fa-copy mr-1"></i> Copiar
+        
+        <!-- Analysis Section -->
+        <div id="analysisSection">
+            <div class="card p-6 mb-8">
+                <h2 class="text-2xl font-bold mb-4 heading-font">Análisis de Antigüedades</h2>
+                <p class="mb-6">Ingrese las URLs de las imágenes de la antigüedad para realizar un análisis completo.</p>
+                
+                <div id="imageUrlsContainer" class="mb-4">
+                    <div class="flex mb-2">
+                        <input type="text" class="vintage-input flex-grow mr-2" placeholder="URL de la imagen (https://...)" data-index="0">
+                        <button class="btn-secondary px-3 py-1 rounded" onclick="addImageUrlField()">
+                            <i class="fas fa-plus"></i>
                         </button>
                     </div>
-                    <div id="descripcionInicial" class="result-section p-4 rounded-md mt-6"></div>
                 </div>
                 
-                <div class="mb-8">
-                    <div class="mb-4 flex justify-between items-center">
-                        <h3 class="text-xl font-semibold section-title">Origen</h3>
-                        <button class="copy-btn" data-content="origen">
-                            <i class="fas fa-copy mr-1"></i> Copiar
-                        </button>
-                    </div>
-                    <div id="origen" class="result-section p-4 rounded-md mt-6"></div>
-                </div>
-                
-                <div class="mb-8">
-                    <div class="mb-4 flex justify-between items-center">
-                        <h3 class="text-xl font-semibold section-title">Periodo</h3>
-                        <button class="copy-btn" data-content="periodo">
-                            <i class="fas fa-copy mr-1"></i> Copiar
-                        </button>
-                    </div>
-                    <div id="periodo" class="result-section p-4 rounded-md mt-6"></div>
-                </div>
-                
-                <div class="mb-8">
-                    <div class="mb-4 flex justify-between items-center">
-                        <h3 class="text-xl font-semibold section-title">Estilo</h3>
-                        <button class="copy-btn" data-content="estilo">
-                            <i class="fas fa-copy mr-1"></i> Copiar
-                        </button>
-                    </div>
-                    <div id="estilo" class="result-section p-4 rounded-md mt-6"></div>
-                </div>
-                
-                <div class="mb-8">
-                    <div class="mb-4 flex justify-between items-center">
-                        <h3 class="text-xl font-semibold section-title">Materiales y Técnicas</h3>
-                        <button class="copy-btn" data-content="materialesTecnicas">
-                            <i class="fas fa-copy mr-1"></i> Copiar
-                        </button>
-                    </div>
-                    <div id="materialesTecnicas" class="result-section p-4 rounded-md mt-6"></div>
-                </div>
-                
-                <div class="mb-8">
-                    <div class="mb-4 flex justify-between items-center">
-                        <h3 class="text-xl font-semibold section-title">Valor de Mercado</h3>
-                        <button class="copy-btn" data-content="valorMercado">
-                            <i class="fas fa-copy mr-1"></i> Copiar
-                        </button>
-                    </div>
-                    <div id="valorMercado" class="result-section p-4 rounded-md mt-6"></div>
-                </div>
-                
-                <div class="mb-8">
-                    <div class="mb-4 flex justify-between items-center">
-                        <h3 class="text-xl font-semibold section-title">Particularidades</h3>
-                        <button class="copy-btn" data-content="particularidades">
-                            <i class="fas fa-copy mr-1"></i> Copiar
-                        </button>
-                    </div>
-                    <div id="particularidades" class="result-section p-4 rounded-md mt-6"></div>
-                </div>
-                
-                <div class="mb-8">
-                    <div class="mb-4 flex justify-between items-center">
-                        <h3 class="text-xl font-semibold section-title">Fuentes</h3>
-                        <button class="copy-btn" data-content="fuentes">
-                            <i class="fas fa-copy mr-1"></i> Copiar
-                        </button>
-                    </div>
-                    <div id="fuentes" class="result-section p-4 rounded-md mt-6"></div>
+                <div class="flex justify-center mt-6">
+                    <button id="analyzeBtn" class="btn-primary px-6 py-2 rounded font-medium">
+                        Analizar Antigüedad
+                    </button>
                 </div>
             </div>
             
-            <!-- WooCommerce Tab -->
-            <div id="woocommerceTab" class="tab-content">
-                <div class="mb-8">
-                    <div class="mb-4 flex justify-between items-center">
-                        <h3 class="text-xl font-semibold section-title">Título del Producto</h3>
-                        <button class="copy-btn" data-content="wooTitulo">
-                            <i class="fas fa-copy mr-1"></i> Copiar
-                        </button>
-                    </div>
-                    <div id="wooTitulo" class="result-section p-4 rounded-md mt-6"></div>
-                </div>
+            <!-- Analysis Progress -->
+            <div id="analysisProgress" class="card p-6 mb-8 hidden">
+                <h3 class="text-xl font-bold mb-4 heading-font">Análisis en Progreso</h3>
+                <div class="loader"></div>
                 
-                <div class="mb-8">
-                    <div class="mb-4 flex justify-between items-center">
-                        <h3 class="text-xl font-semibold section-title">Descripción Corta</h3>
-                        <button class="copy-btn" data-content="wooDescCorta">
-                            <i class="fas fa-copy mr-1"></i> Copiar
-                        </button>
+                <div class="mt-4">
+                    <div class="progress-step mb-2" id="step1">
+                        <i class="fas fa-image text-primary"></i> Analizando imágenes...
                     </div>
-                    <div id="wooDescCorta" class="result-section p-4 rounded-md mt-6"></div>
-                </div>
-                
-                <div class="mb-8">
-                    <div class="mb-4 flex justify-between items-center">
-                        <h3 class="text-xl font-semibold section-title">Descripción Completa (HTML)</h3>
-                        <button class="copy-btn" data-content="wooDescCompleta">
-                            <i class="fas fa-copy mr-1"></i> Copiar
-                        </button>
+                    <div class="progress-step mb-2" id="step2">
+                        <i class="fas fa-search text-primary"></i> Seleccionando la mejor imagen para análisis...
                     </div>
-                    <div id="wooDescCompleta" class="result-section p-4 rounded-md mt-6 overflow-x-auto"></div>
-                </div>
-                
-                <div class="mb-8">
-                    <div class="mb-4 flex justify-between items-center">
-                        <h3 class="text-xl font-semibold section-title">Meta Descripción</h3>
-                        <button class="copy-btn" data-content="wooMetaDesc">
-                            <i class="fas fa-copy mr-1"></i> Copiar
-                        </button>
+                    <div class="progress-step mb-2" id="step3">
+                        <i class="fas fa-microscope text-primary"></i> Realizando análisis visual detallado...
                     </div>
-                    <div id="wooMetaDesc" class="result-section p-4 rounded-md mt-6"></div>
-                </div>
-                
-                <div class="mb-8">
-                    <div class="mb-4 flex justify-between items-center">
-                        <h3 class="text-xl font-semibold section-title">Categorías</h3>
-                        <button class="copy-btn" data-content="wooCategorias">
-                            <i class="fas fa-copy mr-1"></i> Copiar
-                        </button>
+                    <div class="progress-step mb-2" id="step4">
+                        <i class="fas fa-book text-primary"></i> Investigando información histórica y proveniencia...
                     </div>
-                    <div id="wooCategorias" class="result-section p-4 rounded-md mt-6"></div>
-                </div>
-                
-                <div class="mb-8">
-                    <div class="mb-4 flex justify-between items-center">
-                        <h3 class="text-xl font-semibold section-title">Etiquetas</h3>
-                        <button class="copy-btn" data-content="wooEtiquetas">
-                            <i class="fas fa-copy mr-1"></i> Copiar
-                        </button>
+                    <div class="progress-step mb-2" id="step5">
+                        <i class="fas fa-euro-sign text-primary"></i> Estimando valor de mercado con referencias...
                     </div>
-                    <div id="wooEtiquetas" class="result-section p-4 rounded-md mt-6"></div>
+                    <div class="progress-step mb-2" id="step6">
+                        <i class="fas fa-shopping-cart text-primary"></i> Generando contenido para WooCommerce...
+                    </div>
+                    <div class="progress-step mb-2" id="step7">
+                        <i class="fab fa-instagram text-primary"></i> Creando post para Instagram...
+                    </div>
+                    <div class="progress-step" id="step8">
+                        <i class="fas fa-check-circle text-primary"></i> Finalizando y guardando resultados...
+                    </div>
                 </div>
             </div>
             
-            <!-- Instagram Tab -->
-            <div id="instagramTab" class="tab-content">
-                <div class="mb-8">
-                    <div class="mb-4 flex justify-between items-center">
-                        <h3 class="text-xl font-semibold section-title">Texto Principal</h3>
-                        <button class="copy-btn" data-content="instaTexto">
-                            <i class="fas fa-copy mr-1"></i> Copiar
-                        </button>
-                    </div>
-                    <div id="instaTexto" class="result-section p-4 rounded-md mt-6"></div>
+            <!-- Analysis Results -->
+            <div id="analysisResults" class="hidden">
+                <!-- Tabs for Results -->
+                <div class="flex border-b border-gray-200 mb-6">
+                    <div class="vintage-tab active" id="researchTab">Investigación</div>
+                    <div class="vintage-tab" id="woocommerceTab">WooCommerce</div>
+                    <div class="vintage-tab" id="instagramTab">Instagram</div>
                 </div>
                 
-                <div class="mb-8">
-                    <div class="mb-4 flex justify-between items-center">
-                        <h3 class="text-xl font-semibold section-title">Hashtags</h3>
-                        <button class="copy-btn" data-content="instaHashtags">
-                            <i class="fas fa-copy mr-1"></i> Copiar
+                <!-- Research Results -->
+                <div id="researchResults" class="card p-6 mb-8">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-2xl font-bold heading-font">Resultados de la Investigación</h3>
+                        <button id="editResearchBtn" class="text-primary hover:text-primary-dark">
+                            <i class="fas fa-edit"></i> Editar
                         </button>
                     </div>
-                    <div id="instaHashtags" class="result-section p-4 rounded-md mt-6"></div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <img id="antiqueImage" src="" alt="Antigüedad analizada" class="w-full h-auto rounded-lg shadow-md mb-4">
+                            
+                            <div id="descriptionContainer" class="mb-4">
+                                <h4 class="font-bold mb-2">Descripción General</h4>
+                                <p id="initialDescription" class="text-gray-700"></p>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <div id="originContainer" class="mb-4">
+                                <h4 class="font-bold mb-2">Origen</h4>
+                                <p id="origin" class="text-gray-700"></p>
+                            </div>
+                            
+                            <div id="periodContainer" class="mb-4">
+                                <h4 class="font-bold mb-2">Periodo</h4>
+                                <p id="period" class="text-gray-700"></p>
+                            </div>
+                            
+                            <div id="styleContainer" class="mb-4">
+                                <h4 class="font-bold mb-2">Estilo</h4>
+                                <p id="style" class="text-gray-700"></p>
+                            </div>
+                            
+                            <div id="materialsContainer" class="mb-4">
+                                <h4 class="font-bold mb-2">Materiales y Técnicas</h4>
+                                <p id="materials" class="text-gray-700"></p>
+                            </div>
+                            
+                            <div id="valueContainer" class="mb-4">
+                                <h4 class="font-bold mb-2">Valor de Mercado</h4>
+                                <p id="value" class="text-gray-700"></p>
+                            </div>
+                            
+                            <div id="particularitiesContainer" class="mb-4">
+                                <h4 class="font-bold mb-2">Particularidades</h4>
+                                <p id="particularities" class="text-gray-700"></p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="sourcesContainer" class="mt-6">
+                        <h4 class="font-bold mb-2">Fuentes</h4>
+                        <ul id="sources" class="list-disc pl-5 text-gray-700"></ul>
+                    </div>
+                    
+                    <div class="flex justify-center mt-8">
+                        <button id="saveAntiqueBtn" class="btn-primary px-6 py-2 rounded font-medium">
+                            Guardar en Portfolio
+                        </button>
+                    </div>
                 </div>
                 
-                <div class="mb-8">
-                    <div class="mb-4 flex justify-between items-center">
-                        <h3 class="text-xl font-semibold section-title">Call to Action</h3>
-                        <button class="copy-btn" data-content="instaCta">
-                            <i class="fas fa-copy mr-1"></i> Copiar
+                <!-- WooCommerce Results -->
+                <div id="woocommerceResults" class="card p-6 mb-8 hidden">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-2xl font-bold heading-font">Contenido para WooCommerce</h3>
+                        <button id="copyWooBtn" class="text-primary hover:text-primary-dark">
+                            <i class="fas fa-copy"></i> Copiar Todo
                         </button>
                     </div>
-                    <div id="instaCta" class="result-section p-4 rounded-md mt-6"></div>
+                    
+                    <div class="mb-4">
+                        <h4 class="font-bold mb-2">Título del Producto</h4>
+                        <div id="productTitle" class="p-3 bg-gray-50 rounded border border-gray-200"></div>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <h4 class="font-bold mb-2">Descripción Corta</h4>
+                        <div id="shortDescription" class="p-3 bg-gray-50 rounded border border-gray-200"></div>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <h4 class="font-bold mb-2">Descripción Completa (HTML)</h4>
+                        <div id="fullDescription" class="p-3 bg-gray-50 rounded border border-gray-200 max-h-96 overflow-y-auto"></div>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <h4 class="font-bold mb-2">Meta Descripción</h4>
+                        <div id="metaDescription" class="p-3 bg-gray-50 rounded border border-gray-200"></div>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="mb-4">
+                            <h4 class="font-bold mb-2">Categorías</h4>
+                            <div id="categories" class="p-3 bg-gray-50 rounded border border-gray-200"></div>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <h4 class="font-bold mb-2">Etiquetas</h4>
+                            <div id="tags" class="p-3 bg-gray-50 rounded border border-gray-200"></div>
+                        </div>
+                    </div>
                 </div>
                 
-                <div class="mb-8">
-                    <div class="mb-4 flex justify-between items-center">
-                        <h3 class="text-xl font-semibold section-title">Post Completo</h3>
-                        <button class="copy-btn" data-content="instaCompleto">
-                            <i class="fas fa-copy mr-1"></i> Copiar
+                <!-- Instagram Results -->
+                <div id="instagramResults" class="card p-6 mb-8 hidden">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-2xl font-bold heading-font">Post para Instagram</h3>
+                        <button id="copyInstaBtn" class="text-primary hover:text-primary-dark">
+                            <i class="fas fa-copy"></i> Copiar Todo
                         </button>
                     </div>
-                    <div id="instaCompleto" class="result-section p-4 rounded-md mt-6"></div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <img id="instagramImage" src="" alt="Imagen para Instagram" class="w-full h-auto rounded-lg shadow-md mb-4">
+                        </div>
+                        
+                        <div>
+                            <div class="mb-4">
+                                <h4 class="font-bold mb-2">Texto Principal</h4>
+                                <div id="mainText" class="p-3 bg-gray-50 rounded border border-gray-200"></div>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <h4 class="font-bold mb-2">Hashtags</h4>
+                                <div id="hashtags" class="p-3 bg-gray-50 rounded border border-gray-200"></div>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <h4 class="font-bold mb-2">Call to Action</h4>
+                                <div id="callToAction" class="p-3 bg-gray-50 rounded border border-gray-200"></div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
         
-        <!-- Footer -->
-        <footer class="mt-12 text-center text-sm text-gray-600">
-            <div class="ornament mb-4"></div>
-            <p>Palacio Santa Emilia © 2025 - Asistente de Antigüedades</p>
-            <p class="mt-2">Desarrollado para el análisis profesional de antigüedades y piezas históricas</p>
-        </footer>
+        <!-- Portfolio Section -->
+        <div id="portfolioSection" class="hidden">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+                <div class="stats-card">
+                    <h3 class="text-lg font-bold mb-1">Total de Piezas</h3>
+                    <p id="totalPieces" class="text-3xl font-bold text-primary">0</p>
+                </div>
+                <div class="stats-card">
+                    <h3 class="text-lg font-bold mb-1">Valor Total Estimado</h3>
+                    <p id="totalValue" class="text-3xl font-bold text-primary">€0</p>
+                </div>
+                <div class="stats-card">
+                    <h3 class="text-lg font-bold mb-1">Valor Promedio</h3>
+                    <p id="avgValue" class="text-3xl font-bold text-primary">€0</p>
+                </div>
+                <div class="stats-card">
+                    <h3 class="text-lg font-bold mb-1">Época Predominante</h3>
+                    <p id="mainPeriod" class="text-3xl font-bold text-primary">-</p>
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                <div class="card p-4">
+                    <h3 class="text-xl font-bold mb-4 heading-font">Distribución por Estilo</h3>
+                    <canvas id="styleChart" class="chart-container"></canvas>
+                </div>
+                <div class="card p-4">
+                    <h3 class="text-xl font-bold mb-4 heading-font">Distribución por Periodo</h3>
+                    <canvas id="periodChart" class="chart-container"></canvas>
+                </div>
+            </div>
+            
+            <div class="card p-6 mb-8">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-2xl font-bold heading-font">Antigüedades en Portfolio</h3>
+                    <div>
+                        <input type="text" id="searchAntiques" class="vintage-input" placeholder="Buscar antigüedades...">
+                    </div>
+                </div>
+                
+                <div id="antiquesGrid" class="antique-grid mt-6">
+                    <!-- Antiques will be populated here -->
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Edit Antique Modal -->
+    <div id="editModal" class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-70 hidden">
+        <div class="bg-white p-6 rounded-lg shadow-xl max-w-4xl w-full max-h-screen overflow-y-auto">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-2xl font-bold heading-font">Editar Antigüedad</h3>
+                <button id="closeEditModal" class="text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Imagen URL</label>
+                    <input type="text" id="editImageUrl" class="vintage-input w-full mb-4">
+                    
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Descripción General</label>
+                    <textarea id="editDescription" class="vintage-input w-full h-32 mb-4"></textarea>
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Origen</label>
+                    <textarea id="editOrigin" class="vintage-input w-full h-20 mb-4"></textarea>
+                    
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Periodo</label>
+                    <textarea id="editPeriod" class="vintage-input w-full h-20 mb-4"></textarea>
+                    
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Estilo</label>
+                    <textarea id="editStyle" class="vintage-input w-full h-20 mb-4"></textarea>
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Materiales y Técnicas</label>
+                    <textarea id="editMaterials" class="vintage-input w-full h-20 mb-4"></textarea>
+                    
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Valor de Mercado</label>
+                    <textarea id="editValue" class="vintage-input w-full h-20 mb-4"></textarea>
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Particularidades</label>
+                    <textarea id="editParticularities" class="vintage-input w-full h-20 mb-4"></textarea>
+                    
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Fuentes (una por línea)</label>
+                    <textarea id="editSources" class="vintage-input w-full h-20 mb-4"></textarea>
+                </div>
+            </div>
+            
+            <div class="flex justify-between mt-6">
+                <button id="deleteAntiqueBtn" class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700">
+                    Eliminar Antigüedad
+                </button>
+                <div>
+                    <button id="cancelEditBtn" class="px-4 py-2 bg-gray-300 text-gray-700 rounded mr-2 hover:bg-gray-400">
+                        Cancelar
+                    </button>
+                    <button id="saveEditBtn" class="btn-primary px-6 py-2 rounded font-medium">
+                        Guardar Cambios
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Config Modal -->
+    <div id="configModal" class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-70 hidden">
+        <div class="bg-white p-6 rounded-lg shadow-xl max-w-md w-full">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-2xl font-bold heading-font">Configuración</h3>
+                <button id="closeConfigModal" class="text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="mb-4">
+                <label class="block text-sm font-medium text-gray-700 mb-1">API Key de OpenAI</label>
+                <input type="password" id="configApiKey" class="vintage-input w-full mb-1">
+                <p class="text-xs text-gray-500">Ingresa una nueva API key para actualizar la configuración.</p>
+            </div>
+            
+            <div class="mb-4">
+                <label class="block text-sm font-medium text-gray-700 mb-1">Modelo de OpenAI</label>
+                <select id="configModel" class="vintage-input w-full mb-1">
+                    <option value="gpt-4o">GPT-4o (Recomendado)</option>
+                    <option value="gpt-4-turbo">GPT-4 Turbo</option>
+                    <option value="gpt-4">GPT-4</option>
+                </select>
+                <p class="text-xs text-gray-500">El modelo GPT-4o tiene la mejor capacidad de análisis de imágenes.</p>
+            </div>
+            
+            <div class="flex justify-end mt-6">
+                <button id="saveConfigBtn" class="btn-primary px-6 py-2 rounded font-medium">
+                    Guardar Configuración
+                </button>
+            </div>
+        </div>
     </div>
 
+    <!-- Chart.js for portfolio visualizations -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+    
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // DOM Elements
-            const apiKeyInput = document.getElementById('apiKey');
-            const saveKeyBtn = document.getElementById('saveKey');
-            const rememberKeyCheck = document.getElementById('rememberKey');
-            const imageUrlInput = document.getElementById('imageUrl');
-            const addUrlBtn = document.getElementById('addUrl');
-            const urlListContainer = document.getElementById('urlListContainer');
-            const urlList = document.getElementById('urlList');
-            const analyzeBtn = document.getElementById('analyzeBtn');
-            const loadingOverlay = document.getElementById('loadingOverlay');
-            const resultsContainer = document.getElementById('resultsContainer');
-            const tabButtons = document.querySelectorAll('.tab-btn');
-            const tabContents = document.querySelectorAll('.tab-content');
-            const copyButtons = document.querySelectorAll('.copy-btn');
+        // State Management
+        const state = {
+            apiKey: localStorage.getItem('se_api_key') || '',
+            model: localStorage.getItem('se_model') || 'gpt-4o',
+            antiques: JSON.parse(localStorage.getItem('se_antiques') || '[]'),
+            currentAntique: null,
+            currentAntiqueId: null,
+            styleChart: null,
+            periodChart: null,
+            editingAntiqueId: null
+        };
+        
+        // DOM Elements
+        const elements = {
+            apiKeyModal: document.getElementById('apiKeyModal'),
+            apiKeyInput: document.getElementById('apiKey'),
+            saveApiKeyBtn: document.getElementById('saveApiKey'),
+            appContainer: document.getElementById('appContainer'),
             
-            // Variables
-            let imageUrls = [];
-            let apiKey = '';
+            // Tabs
+            analysisTab: document.getElementById('analysisTab'),
+            portfolioTab: document.getElementById('portfolioTab'),
+            analysisSection: document.getElementById('analysisSection'),
+            portfolioSection: document.getElementById('portfolioSection'),
             
-            // Check for saved API key
-            if (localStorage.getItem('santaEmiliaApiKey')) {
-                apiKeyInput.value = localStorage.getItem('santaEmiliaApiKey');
-                rememberKeyCheck.checked = true;
-                apiKey = apiKeyInput.value;
+            // Analysis
+            imageUrlsContainer: document.getElementById('imageUrlsContainer'),
+            analyzeBtn: document.getElementById('analyzeBtn'),
+            analysisProgress: document.getElementById('analysisProgress'),
+            analysisResults: document.getElementById('analysisResults'),
+            
+            // Results Tabs
+            researchTab: document.getElementById('researchTab'),
+            woocommerceTab: document.getElementById('woocommerceTab'),
+            instagramTab: document.getElementById('instagramTab'),
+            researchResults: document.getElementById('researchResults'),
+            woocommerceResults: document.getElementById('woocommerceResults'),
+            instagramResults: document.getElementById('instagramResults'),
+            
+            // Research Results
+            antiqueImage: document.getElementById('antiqueImage'),
+            initialDescription: document.getElementById('initialDescription'),
+            origin: document.getElementById('origin'),
+            period: document.getElementById('period'),
+            style: document.getElementById('style'),
+            materials: document.getElementById('materials'),
+            value: document.getElementById('value'),
+            particularities: document.getElementById('particularities'),
+            sources: document.getElementById('sources'),
+            saveAntiqueBtn: document.getElementById('saveAntiqueBtn'),
+            editResearchBtn: document.getElementById('editResearchBtn'),
+            
+            // WooCommerce Results
+            productTitle: document.getElementById('productTitle'),
+            shortDescription: document.getElementById('shortDescription'),
+            fullDescription: document.getElementById('fullDescription'),
+            metaDescription: document.getElementById('metaDescription'),
+            categories: document.getElementById('categories'),
+            tags: document.getElementById('tags'),
+            copyWooBtn: document.getElementById('copyWooBtn'),
+            
+            // Instagram Results
+            instagramImage: document.getElementById('instagramImage'),
+            mainText: document.getElementById('mainText'),
+            hashtags: document.getElementById('hashtags'),
+            callToAction: document.getElementById('callToAction'),
+            copyInstaBtn: document.getElementById('copyInstaBtn'),
+            
+            // Portfolio
+            totalPieces: document.getElementById('totalPieces'),
+            totalValue: document.getElementById('totalValue'),
+            avgValue: document.getElementById('avgValue'),
+            mainPeriod: document.getElementById('mainPeriod'),
+            styleChart: document.getElementById('styleChart'),
+            periodChart: document.getElementById('periodChart'),
+            antiquesGrid: document.getElementById('antiquesGrid'),
+            searchAntiques: document.getElementById('searchAntiques'),
+            
+            // Edit Modal
+            editModal: document.getElementById('editModal'),
+            closeEditModal: document.getElementById('closeEditModal'),
+            editImageUrl: document.getElementById('editImageUrl'),
+            editDescription: document.getElementById('editDescription'),
+            editOrigin: document.getElementById('editOrigin'),
+            editPeriod: document.getElementById('editPeriod'),
+            editStyle: document.getElementById('editStyle'),
+            editMaterials: document.getElementById('editMaterials'),
+            editValue: document.getElementById('editValue'),
+            editParticularities: document.getElementById('editParticularities'),
+            editSources: document.getElementById('editSources'),
+            deleteAntiqueBtn: document.getElementById('deleteAntiqueBtn'),
+            cancelEditBtn: document.getElementById('cancelEditBtn'),
+            saveEditBtn: document.getElementById('saveEditBtn'),
+            
+            // Config
+            configBtn: document.getElementById('configBtn'),
+            configModal: document.getElementById('configModal'),
+            closeConfigModal: document.getElementById('closeConfigModal'),
+            configApiKey: document.getElementById('configApiKey'),
+            configModel: document.getElementById('configModel'),
+            saveConfigBtn: document.getElementById('saveConfigBtn'),
+            
+            // Import/Export
+            exportBtn: document.getElementById('exportBtn'),
+            importBtn: document.getElementById('importBtn'),
+            importFile: document.getElementById('importFile')
+        };
+        
+        // Progress Steps
+        const progressSteps = [
+            document.getElementById('step1'),
+            document.getElementById('step2'),
+            document.getElementById('step3'),
+            document.getElementById('step4'),
+            document.getElementById('step5'),
+            document.getElementById('step6'),
+            document.getElementById('step7'),
+            document.getElementById('step8')
+        ];
+        
+        // Initialize Application
+        function initApp() {
+            // Check if API Key exists
+            if (!state.apiKey) {
+                elements.apiKeyModal.classList.remove('hidden');
+                elements.appContainer.classList.add('hidden');
+            } else {
+                elements.apiKeyModal.classList.add('hidden');
+                elements.appContainer.classList.remove('hidden');
+                updatePortfolioView();
             }
             
-            // Event Listeners
-            saveKeyBtn.addEventListener('click', saveApiKey);
-            addUrlBtn.addEventListener('click', addImageUrl);
-            analyzeBtn.addEventListener('click', analyzeAntique);
+            // Set up event listeners
+            setupEventListeners();
+        }
+        
+        // Set up event listeners
+        function setupEventListeners() {
+            // API Key Modal
+            elements.saveApiKeyBtn.addEventListener('click', saveApiKey);
             
-            // Tab switching
-            tabButtons.forEach(button => {
-                button.addEventListener('click', () => {
-                    const tabId = button.getAttribute('data-tab');
-                    
-                    // Remove active class from all buttons and tabs
-                    tabButtons.forEach(btn => btn.classList.remove('active'));
-                    tabContents.forEach(content => content.classList.remove('active'));
-                    
-                    // Add active class to current button and tab
-                    button.classList.add('active');
-                    document.getElementById(`${tabId}Tab`).classList.add('active');
-                });
+            // Tabs
+            elements.analysisTab.addEventListener('click', () => switchTab('analysis'));
+            elements.portfolioTab.addEventListener('click', () => switchTab('portfolio'));
+            
+            // Analysis
+            elements.analyzeBtn.addEventListener('click', startAnalysis);
+            
+            // Results Tabs
+            elements.researchTab.addEventListener('click', () => switchResultsTab('research'));
+            elements.woocommerceTab.addEventListener('click', () => switchResultsTab('woocommerce'));
+            elements.instagramTab.addEventListener('click', () => switchResultsTab('instagram'));
+            
+            // Save Antique
+            elements.saveAntiqueBtn.addEventListener('click', saveAntiqueToPortfolio);
+            elements.editResearchBtn.addEventListener('click', editCurrentAntique);
+            
+            // Copy buttons
+            elements.copyWooBtn.addEventListener('click', copyWoocommerceContent);
+            elements.copyInstaBtn.addEventListener('click', copyInstagramContent);
+            
+            // Edit Modal
+            elements.closeEditModal.addEventListener('click', closeEditModal);
+            elements.cancelEditBtn.addEventListener('click', closeEditModal);
+            elements.saveEditBtn.addEventListener('click', saveEditedAntique);
+            elements.deleteAntiqueBtn.addEventListener('click', deleteAntique);
+            
+            // Config Modal
+            elements.configBtn.addEventListener('click', openConfigModal);
+            elements.closeConfigModal.addEventListener('click', closeConfigModal);
+            elements.saveConfigBtn.addEventListener('click', saveConfig);
+            
+            // Import/Export
+            elements.exportBtn.addEventListener('click', exportDatabase);
+            elements.importBtn.addEventListener('click', () => elements.importFile.click());
+            elements.importFile.addEventListener('change', importDatabase);
+            
+            // Search
+            elements.searchAntiques.addEventListener('input', filterAntiques);
+        }
+        
+        // Save API Key
+        function saveApiKey() {
+            const apiKey = elements.apiKeyInput.value.trim();
+            if (apiKey && apiKey.startsWith('sk-')) {
+                state.apiKey = apiKey;
+                localStorage.setItem('se_api_key', apiKey);
+                elements.apiKeyModal.classList.add('hidden');
+                elements.appContainer.classList.remove('hidden');
+                updatePortfolioView();
+            } else {
+                alert('Por favor ingresa una API Key válida. Debe comenzar con "sk-".');
+            }
+        }
+        
+        // Switch between Analysis and Portfolio tabs
+        function switchTab(tab) {
+            if (tab === 'analysis') {
+                elements.analysisTab.classList.add('active');
+                elements.portfolioTab.classList.remove('active');
+                elements.analysisSection.classList.remove('hidden');
+                elements.portfolioSection.classList.add('hidden');
+            } else {
+                elements.analysisTab.classList.remove('active');
+                elements.portfolioTab.classList.add('active');
+                elements.analysisSection.classList.add('hidden');
+                elements.portfolioSection.classList.remove('hidden');
+                updatePortfolioView();
+            }
+        }
+        
+        // Switch between Results tabs
+        function switchResultsTab(tab) {
+            elements.researchTab.classList.remove('active');
+            elements.woocommerceTab.classList.remove('active');
+            elements.instagramTab.classList.remove('active');
+            elements.researchResults.classList.add('hidden');
+            elements.woocommerceResults.classList.add('hidden');
+            elements.instagramResults.classList.add('hidden');
+            
+            if (tab === 'research') {
+                elements.researchTab.classList.add('active');
+                elements.researchResults.classList.remove('hidden');
+            } else if (tab === 'woocommerce') {
+                elements.woocommerceTab.classList.add('active');
+                elements.woocommerceResults.classList.remove('hidden');
+            } else {
+                elements.instagramTab.classList.add('active');
+                elements.instagramResults.classList.remove('hidden');
+            }
+        }
+        
+        // Add Image URL Field
+        function addImageUrlField() {
+            const container = elements.imageUrlsContainer;
+            const index = container.querySelectorAll('input').length;
+            
+            const div = document.createElement('div');
+            div.className = 'flex mb-2';
+            div.innerHTML = `
+                <input type="text" class="vintage-input flex-grow mr-2" placeholder="URL de la imagen (https://...)" data-index="${index}">
+                <button class="btn-secondary px-3 py-1 rounded" onclick="removeImageUrlField(this)">
+                    <i class="fas fa-minus"></i>
+                </button>
+            `;
+            
+            container.appendChild(div);
+        }
+        
+        // Remove Image URL Field
+        function removeImageUrlField(button) {
+            const div = button.parentElement;
+            div.remove();
+        }
+        
+        // Get Image URLs from fields
+        function getImageUrls() {
+            const inputs = elements.imageUrlsContainer.querySelectorAll('input');
+            const urls = [];
+            
+            inputs.forEach(input => {
+                const url = input.value.trim();
+                if (url && url.startsWith('http')) {
+                    urls.push(url);
+                }
             });
             
-            // Copy functionality
-            copyButtons.forEach(button => {
-                button.addEventListener('click', () => {
-                    const contentId = button.getAttribute('data-content');
-                    const content = document.getElementById(contentId).innerText;
-                    
-                    navigator.clipboard.writeText(content).then(() => {
-                        const originalText = button.innerHTML;
-                        button.innerHTML = '<i class="fas fa-check mr-1"></i> Copiado';
-                        
-                        setTimeout(() => {
-                            button.innerHTML = originalText;
-                        }, 2000);
-                    }).catch(err => {
-                        console.error('Error al copiar texto: ', err);
-                    });
-                });
+            return urls;
+        }
+        
+        // Start Analysis
+        async function startAnalysis() {
+            const imageUrls = getImageUrls();
+            if (imageUrls.length === 0) {
+                alert('Por favor, ingrese al menos una URL de imagen válida.');
+                return;
+            }
+            
+            // Show progress and hide results
+            elements.analysisProgress.classList.remove('hidden');
+            elements.analysisResults.classList.add('hidden');
+            
+            // Reset progress steps
+            progressSteps.forEach(step => step.classList.remove('visible'));
+            
+            try {
+                // Step 1: Select best image
+                updateProgress(0);
+                let bestImage = imageUrls[0];
+                
+                if (imageUrls.length > 1) {
+                    updateProgress(1);
+                    bestImage = await selectBestImage(imageUrls);
+                }
+                
+                // Step 2: Analyze image
+                updateProgress(2);
+                const initialDescription = await analyzeImage(bestImage);
+                
+                // Step 3: Research antique
+                updateProgress(3);
+                const research = await researchAntique(initialDescription, bestImage);
+                
+                // Step 4: Market value
+                updateProgress(4);
+                
+                // Step 5: Generate WooCommerce content
+                updateProgress(5);
+                const woocommerceContent = await generateWoocommerceContent(research);
+                
+                // Step 6: Generate Instagram content
+                updateProgress(6);
+                const instagramContent = await generateInstagramContent(research);
+                
+                // Step 7: Save results
+                updateProgress(7);
+                
+                // Create current antique object
+                state.currentAntique = {
+                    id: generateId(),
+                    imageUrl: bestImage,
+                    description: initialDescription,
+                    research: research,
+                    woocommerce: woocommerceContent,
+                    instagram: instagramContent,
+                    createdAt: new Date().toISOString()
+                };
+                
+                // Display results
+                displayResults(state.currentAntique);
+                
+                // Hide progress and show results
+                setTimeout(() => {
+                    elements.analysisProgress.classList.add('hidden');
+                    elements.analysisResults.classList.remove('hidden');
+                }, 500);
+            } catch (error) {
+                elements.analysisProgress.classList.add('hidden');
+                alert(`Error durante el análisis: ${error.message || 'Error desconocido'}`);
+                console.error(error);
+            }
+        }
+        
+        // Update Progress
+        function updateProgress(step) {
+            if (step >= 0 && step < progressSteps.length) {
+                progressSteps[step].classList.add('visible');
+            }
+        }
+        
+        // Call OpenAI API
+        async function callOpenAI(messages, model = state.model) {
+            const response = await fetch('https://api.openai.com/v1/chat/completions', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${state.apiKey}`
+                },
+                body: JSON.stringify({
+                    model: model,
+                    messages: messages,
+                    temperature: 0.7
+                })
             });
             
-            // Functions
-            function saveApiKey() {
-                apiKey = apiKeyInput.value.trim();
-                
-                if (!apiKey) {
-                    alert('Por favor, introduce una API Key válida');
-                    return;
-                }
-                
-                if (rememberKeyCheck.checked) {
-                    localStorage.setItem('santaEmiliaApiKey', apiKey);
-                } else {
-                    localStorage.removeItem('santaEmiliaApiKey');
-                }
-                
-                alert('API Key guardada correctamente');
+            if (!response.ok) {
+                const error = await response.json();
+                throw new Error(error.error.message || 'Error al comunicarse con OpenAI');
             }
             
-            function addImageUrl() {
-                const url = imageUrlInput.value.trim();
-                
-                if (!url) {
-                    alert('Por favor, introduce una URL válida');
-                    return;
-                }
-                
-                if (!url.startsWith('http')) {
-                    alert('Por favor, introduce una URL válida que comience con http:// o https://');
-                    return;
-                }
-                
-                if (imageUrls.includes(url)) {
-                    alert('Esta URL ya ha sido añadida');
-                    return;
-                }
-                
-                imageUrls.push(url);
-                imageUrlInput.value = '';
-                updateUrlList();
-                urlListContainer.classList.remove('hidden');
+            const data = await response.json();
+            return data.choices[0].message.content;
+        }
+        
+        // Select Best Image
+        async function selectBestImage(imageUrls) {
+            // If only one image, return it
+            if (imageUrls.length === 1) return imageUrls[0];
+            
+            // Prepare image content
+            const imageContent = [];
+            for (let i = 0; i < imageUrls.length; i++) {
+                imageContent.push({type: "text", text: `Imagen ${i+1}:`});
+                imageContent.push({type: "image_url", image_url: {url: imageUrls[i]}});
             }
             
-            function updateUrlList() {
-                urlList.innerHTML = '';
-                
-                imageUrls.forEach((url, index) => {
-                    const item = document.createElement('div');
-                    item.className = 'url-item';
-                    
-                    const urlText = document.createElement('div');
-                    urlText.className = 'truncate';
-                    urlText.textContent = url;
-                    
-                    const removeButton = document.createElement('button');
-                    removeButton.innerHTML = '<i class="fas fa-times"></i>';
-                    removeButton.className = 'text-red-500 hover:text-red-700';
-                    removeButton.addEventListener('click', () => {
-                        imageUrls.splice(index, 1);
-                        updateUrlList();
-                        
-                        if (imageUrls.length === 0) {
-                            urlListContainer.classList.add('hidden');
-                        }
-                    });
-                    
-                    item.appendChild(urlText);
-                    item.appendChild(removeButton);
-                    urlList.appendChild(item);
-                });
-            }
-            
-            async function analyzeAntique() {
-                if (!apiKey) {
-                    alert('Por favor, introduce y guarda tu API Key de OpenAI primero');
-                    return;
-                }
-                
-                if (imageUrls.length === 0) {
-                    alert('Por favor, añade al menos una URL de imagen');
-                    return;
-                }
-                
-                // Show loading overlay
-                loadingOverlay.classList.remove('hidden');
-                
-                try {
-                    // Step 1: Select the best image if there are multiple
-                    let bestImageUrl = imageUrls[0];
-                    
-                    if (imageUrls.length > 1) {
-                        bestImageUrl = await selectBestImage(imageUrls);
-                    }
-                    
-                    // Step 2: Analyze the image
-                    const initialDescription = await analyzeImage(bestImageUrl);
-                    
-                    // Step 3: Conduct deep research
-                    const researchData = await conductResearch(initialDescription);
-                    
-                    // Step 4: Generate WooCommerce content
-                    const wooData = await generateWoocommerceContent(researchData);
-                    
-                    // Step 5: Generate Instagram content
-                    const instaData = await generateInstagramContent(researchData);
-                    
-                    // Display results
-                    displayResults({
-                        research: {
-                            descripcionInicial: initialDescription,
-                            ...researchData
-                        },
-                        woocommerce: wooData,
-                        instagram: instaData
-                    });
-                    
-                    // Show results container
-                    resultsContainer.classList.remove('hidden');
-                    
-                    // Scroll to results
-                    resultsContainer.scrollIntoView({ behavior: 'smooth' });
-                } catch (error) {
-                    console.error('Error:', error);
-                    alert(`Error durante el análisis: ${error.message}`);
-                } finally {
-                    // Hide loading overlay
-                    loadingOverlay.classList.add('hidden');
-                }
-            }
-            
-            async function selectBestImage(urls) {
-                console.log('Selecting best image from multiple URLs...');
-                
-                try {
-                    const imageContent = [];
-                    
-                    urls.forEach((url, index) => {
-                        imageContent.push({
-                            type: "text",
-                            text: `Imagen ${index+1}:`
-                        });
-                        
-                        imageContent.push({
-                            type: "image_url",
-                            image_url: { url }
-                        });
-                    });
-                    
-                    const messages = [
+            const messages = [
+                {
+                    role: "system", 
+                    content: "Eres un experto en fotografía y antigüedades. Tu tarea es analizar varias fotografías de la misma pieza y determinar cuál es la mejor para un análisis detallado, considerando claridad, iluminación, ángulo, detalle visible y representatividad de la pieza."
+                },
+                {
+                    role: "user", 
+                    content: [
+                        ...imageContent,
                         {
-                            role: "system",
-                            content: "Eres un experto en fotografía y antigüedades. Tu tarea es analizar varias fotografías de la misma pieza y determinar cuál es la mejor para un análisis detallado, considerando claridad, iluminación, ángulo, detalle visible y representatividad de la pieza."
+                            type: "text", 
+                            text: "De las imágenes mostradas, indica cuál es la mejor para analizar detalladamente esta antigüedad. Responde solo con el número de la imagen seleccionada, por ejemplo: 'Imagen 2'."
+                        }
+                    ]
+                }
+            ];
+            
+            try {
+                const response = await callOpenAI(messages);
+                
+                // Parse the response to get the selected image number
+                for (let i = 1; i <= imageUrls.length; i++) {
+                    if (response.includes(`Imagen ${i}`) || response.includes(`imagen ${i}`)) {
+                        return imageUrls[i-1];
+                    }
+                }
+                
+                // If no clear selection, return the first image
+                return imageUrls[0];
+            } catch (error) {
+                console.error("Error selecting best image:", error);
+                return imageUrls[0]; // Default to first image on error
+            }
+        }
+        
+        // Analyze Image
+        async function analyzeImage(imageUrl) {
+            const messages = [
+                {
+                    role: "system", 
+                    content: "Eres un experto tasador y catalogador de antigüedades con amplios conocimientos de historia del arte, estilos decorativos y mobiliario histórico. Observa cuidadosamente los detalles y proporciona un análisis completo."
+                },
+                {
+                    role: "user", 
+                    content: [
+                        {
+                            type: "text", 
+                            text: "Describe detalladamente esta pieza antigua. Identifica qué es, de qué época parece ser, materiales, técnicas utilizadas, estilo artístico y cualquier detalle distintivo que observes."
                         },
                         {
-                            role: "user",
-                            content: [
-                                ...imageContent,
-                                {
-                                    type: "text",
-                                    text: "De las imágenes mostradas, indica cuál es la mejor para analizar detalladamente esta antigüedad. Responde solo con el número de la imagen seleccionada, por ejemplo: 'Imagen 2'."
-                                }
-                            ]
+                            type: "image_url", 
+                            image_url: {url: imageUrl}
                         }
-                    ];
-                    
-                    const response = await callOpenAIAPI(messages);
-                    
-                    // Extract image number from response
-                    for (let i = 1; i <= urls.length; i++) {
-                        if (response.includes(`Imagen ${i}`) || response.includes(`imagen ${i}`)) {
-                            console.log(`Selected image ${i} as the best`);
-                            return urls[i-1];
-                        }
-                    }
-                    
-                    // Default to first image if no clear selection
-                    console.log('Could not determine best image, using the first one');
-                    return urls[0];
-                } catch (error) {
-                    console.error('Error selecting best image:', error);
-                    return urls[0]; // Default to first image in case of error
+                    ]
                 }
-            }
+            ];
             
-            async function analyzeImage(imageUrl) {
-                console.log('Analyzing image...');
-                
-                const messages = [
-                    {
-                        role: "system",
-                        content: "Eres un experto tasador y catalogador de antigüedades con amplios conocimientos de historia del arte, estilos decorativos y mobiliario histórico. Observa cuidadosamente los detalles y proporciona un análisis completo."
-                    },
-                    {
-                        role: "user",
-                        content: [
-                            {
-                                type: "text",
-                                text: "Describe detalladamente esta pieza antigua. Identifica qué es, de qué época parece ser, materiales, técnicas utilizadas, estilo artístico y cualquier detalle distintivo que observes."
-                            },
-                            {
-                                type: "image_url",
-                                image_url: { url: imageUrl }
-                            }
-                        ]
-                    }
-                ];
-                
-                return await callOpenAIAPI(messages);
+            try {
+                return await callOpenAI(messages);
+            } catch (error) {
+                console.error("Error analyzing image:", error);
+                throw new Error("Error al analizar la imagen. Por favor, intenta con otra imagen o más tarde.");
             }
+        }
+        
+        // Research Antique
+        async function researchAntique(description, imageUrl) {
+            const researchMessages = [
+                {
+                    role: "system", 
+                    content: "Eres un experto en antigüedades con acceso a bases de datos especializadas, catálogos de subastas y literatura académica. Realiza una investigación exhaustiva sobre esta pieza y proporciona información verificable con fuentes. Para cada afirmación importante, cita una fuente real y específica (casas de subastas, museos, catálogos, libros académicos)."
+                },
+                {
+                    role: "user", 
+                    content: `Basándote en esta descripción, realiza una investigación profunda de la pieza: ${description}
+                    
+                    Proporciona la siguiente información:
+                    1. ORIGEN: Lugar, taller o fabricante probable, contexto histórico-cultural
+                    2. PERIODO: Época exacta o aproximada de fabricación con justificación
+                    3. ESTILO: Clasificación estilística, características distintivas, contexto artístico
+                    4. MATERIALES Y TÉCNICAS: Análisis detallado de materiales, métodos de fabricación
+                    5. VALOR DE MERCADO: Rango de precios actual con ejemplos de piezas similares en subastas o ventas recientes
+                    6. PARTICULARIDADES: Elementos distintivos, rareza, estado de conservación
+                    
+                    Cada sección debe incluir al menos una fuente citada específica (nombre de casa de subastas, título de libro, nombre de museo, catálogo específico, etc.). Las fuentes deben ser reales, verificables y relevantes para el tipo de pieza.`
+                }
+            ];
             
-            async function conductResearch(initialDescription) {
-                console.log('Conducting deep research...');
+            try {
+                const researchResponse = await callOpenAI(researchMessages);
                 
-                // First, get the detailed research
-                const researchMessages = [
-                    {
-                        role: "system",
-                        content: "Eres un experto en antigüedades con acceso a bases de datos especializadas, catálogos de subastas y literatura académica. Realiza una investigación exhaustiva sobre esta pieza y proporciona información verificable con fuentes. Para cada afirmación importante, cita una fuente real y específica (casas de subastas, museos, catálogos, libros académicos)."
-                    },
-                    {
-                        role: "user",
-                        content: `Basándote en esta descripción, realiza una investigación profunda de la pieza: ${initialDescription}
-                        
-                        Proporciona la siguiente información:
-                        1. ORIGEN: Lugar, taller o fabricante probable, contexto histórico-cultural
-                        2. PERIODO: Época exacta o aproximada de fabricación con justificación
-                        3. ESTILO: Clasificación estilística, características distintivas, contexto artístico
-                        4. MATERIALES Y TÉCNICAS: Análisis detallado de materiales, métodos de fabricación
-                        5. VALOR DE MERCADO: Rango de precios actual con ejemplos de piezas similares en subastas o ventas recientes
-                        6. PARTICULARIDADES: Elementos distintivos, rareza, estado de conservación
-                        
-                        Cada sección debe incluir al menos una fuente citada específica (nombre de casa de subastas, título de libro, nombre de museo, catálogo específico, etc.). Las fuentes deben ser reales, verificables y relevantes para el tipo de pieza.`
-                    }
-                ];
-                
-                const researchResponse = await callOpenAIAPI(researchMessages);
-                
-                // Then, structure it into JSON format
+                // Structure the response
                 const structureMessages = [
                     {
-                        role: "system",
+                        role: "system", 
                         content: "Tu tarea es estructurar información detallada sobre antigüedades en formato JSON para uso técnico."
                     },
                     {
-                        role: "user",
+                        role: "user", 
                         content: `Convierte esta investigación sobre una antigüedad a formato JSON estructurado:
                         
                         ${researchResponse}
@@ -809,262 +1099,835 @@
                     }
                 ];
                 
-                const jsonResponse = await callOpenAIAPI(structureMessages);
+                const jsonResponse = await callOpenAI(structureMessages);
                 
+                // Parse the JSON response
+                let jsonResult;
                 try {
-                    // Extract JSON from the response
+                    // Find the JSON object in the response
                     const jsonMatch = jsonResponse.match(/\{[\s\S]*\}/);
                     if (jsonMatch) {
-                        return JSON.parse(jsonMatch[0]);
+                        jsonResult = JSON.parse(jsonMatch[0]);
+                    } else {
+                        throw new Error("No se encontró un objeto JSON válido en la respuesta");
                     }
-                    
-                    // If no JSON found, return a formatted object with the full response
+                } catch (jsonError) {
+                    console.error("Error parsing JSON:", jsonError);
                     return {
-                        origen: "Error al procesar el formato JSON",
-                        periodo: "Error al procesar el formato JSON",
-                        estilo: "Error al procesar el formato JSON",
-                        materiales_tecnicas: "Error al procesar el formato JSON",
-                        valor_mercado: "Error al procesar el formato JSON",
-                        particularidades: "Error al procesar el formato JSON",
-                        fuentes: ["Error al procesar el formato JSON"],
-                        investigacion_completa: researchResponse
-                    };
-                } catch (error) {
-                    console.error('Error parsing JSON response:', error);
-                    
-                    // Return a formatted object with the full response
-                    return {
-                        origen: "Error al procesar el formato JSON",
-                        periodo: "Error al procesar el formato JSON",
-                        estilo: "Error al procesar el formato JSON",
-                        materiales_tecnicas: "Error al procesar el formato JSON",
-                        valor_mercado: "Error al procesar el formato JSON",
-                        particularidades: "Error al procesar el formato JSON",
-                        fuentes: ["Error al procesar el formato JSON"],
-                        investigacion_completa: researchResponse
+                        origen: "Error en el análisis",
+                        periodo: "Error en el análisis",
+                        estilo: "Error en el análisis",
+                        materiales_tecnicas: "Error en el análisis",
+                        valor_mercado: "Error en el análisis",
+                        particularidades: "Error en el análisis",
+                        fuentes: ["Error en el análisis"]
                     };
                 }
+                
+                // Add the description and image URL to the result
+                jsonResult.descripcion_inicial = description;
+                jsonResult.imagen_url = imageUrl;
+                
+                return jsonResult;
+            } catch (error) {
+                console.error("Error researching antique:", error);
+                throw new Error("Error durante la investigación de la antigüedad. Por favor, intenta de nuevo más tarde.");
             }
+        }
+        
+        // Generate WooCommerce Content
+        async function generateWoocommerceContent(antiqueData) {
+            const antiqueJson = JSON.stringify(antiqueData);
             
-            async function generateWoocommerceContent(researchData) {
-                console.log('Generating WooCommerce content...');
+            const messages = [
+                {
+                    role: "system", 
+                    content: "Eres un especialista en marketing de antigüedades y e-commerce. Tu tarea es crear descripciones completas y atractivas para productos de alta gama en una tienda WooCommerce, manteniendo rigor histórico y técnico pero con un enfoque comercial. La descripción debe ser sofisticada y atractiva para coleccionistas y amantes de las antigüedades."
+                },
+                {
+                    role: "user", 
+                    content: `Crea una descripción completa para WooCommerce de esta antigüedad basada en la siguiente información:
+                    
+                    ${antiqueJson}
+                    
+                    Necesito estos elementos:
+                    1. TÍTULO DEL PRODUCTO: Nombre comercial atractivo pero técnicamente preciso (máx 70 caracteres)
+                    2. DESCRIPCIÓN CORTA: Resumen conciso y elegante (2-3 frases)
+                    3. DESCRIPCIÓN COMPLETA: Descripción detallada en HTML con formato profesional
+                       - Debe incluir todos los detalles técnicos (origen, periodo, estilo, materiales)
+                       - Debe mencionar el valor e importancia de la pieza
+                       - Debe tener párrafos bien estructurados con subtítulos en <h3>
+                       - Debe incluir al final una sección de procedencia/autenticación
+                    4. META DESCRIPCIÓN: Texto SEO optimizado (máx 160 caracteres)
+                    5. CATEGORÍAS: Sugerencia de categorías para la tienda (3-5)
+                    6. ETIQUETAS: Keywords relevantes para búsquedas (8-10)
+                    
+                    Estructura tu respuesta en formato JSON con las claves: titulo, descripcion_corta, descripcion_completa, meta_descripcion, categorias, etiquetas.`
+                }
+            ];
+            
+            try {
+                const response = await callOpenAI(messages);
                 
-                const messages = [
-                    {
-                        role: "system",
-                        content: "Eres un especialista en marketing de antigüedades y e-commerce. Tu tarea es crear descripciones completas y atractivas para productos de alta gama en una tienda WooCommerce, manteniendo rigor histórico y técnico pero con un enfoque comercial. La descripción debe ser sofisticada y atractiva para coleccionistas y amantes de las antigüedades."
-                    },
-                    {
-                        role: "user",
-                        content: `Crea una descripción completa para WooCommerce de esta antigüedad basada en la siguiente información:
-                        
-                        ${JSON.stringify(researchData, null, 2)}
-                        
-                        Necesito estos elementos:
-                        1. TÍTULO DEL PRODUCTO: Nombre comercial atractivo pero técnicamente preciso (máx 70 caracteres)
-                        2. DESCRIPCIÓN CORTA: Resumen conciso y elegante (2-3 frases)
-                        3. DESCRIPCIÓN COMPLETA: Descripción detallada en HTML con formato profesional
-                           - Debe incluir todos los detalles técnicos (origen, periodo, estilo, materiales)
-                           - Debe mencionar el valor e importancia de la pieza
-                           - Debe tener párrafos bien estructurados con subtítulos en <h3>
-                           - Debe incluir al final una sección de procedencia/autenticación
-                        4. META DESCRIPCIÓN: Texto SEO optimizado (máx 160 caracteres)
-                        5. CATEGORÍAS: Sugerencia de categorías para la tienda (3-5)
-                        6. ETIQUETAS: Keywords relevantes para búsquedas (8-10)
-                        
-                        Estructura tu respuesta en formato JSON con las claves: titulo, descripcion_corta, descripcion_completa, meta_descripcion, categorias, etiquetas.`
-                    }
-                ];
-                
-                const response = await callOpenAIAPI(messages);
-                
+                // Parse JSON from response
                 try {
-                    // Extract JSON from the response
+                    // Find the JSON object in the response
                     const jsonMatch = response.match(/\{[\s\S]*\}/);
                     if (jsonMatch) {
                         return JSON.parse(jsonMatch[0]);
+                    } else {
+                        throw new Error("No se encontró un objeto JSON válido en la respuesta");
                     }
-                    
-                    // If no JSON found, return a formatted object with the full response
+                } catch (jsonError) {
+                    console.error("Error parsing WooCommerce JSON:", jsonError);
                     return {
-                        titulo: "Error al procesar el formato JSON",
-                        descripcion_corta: "Error al procesar el formato JSON",
-                        descripcion_completa: "Error al procesar el formato JSON",
-                        meta_descripcion: "Error al procesar el formato JSON",
-                        categorias: "Error al procesar el formato JSON",
-                        etiquetas: "Error al procesar el formato JSON",
-                        respuesta_completa: response
-                    };
-                } catch (error) {
-                    console.error('Error parsing JSON response:', error);
-                    
-                    // Return a formatted object with the full response
-                    return {
-                        titulo: "Error al procesar el formato JSON",
-                        descripcion_corta: "Error al procesar el formato JSON",
-                        descripcion_completa: "Error al procesar el formato JSON",
-                        meta_descripcion: "Error al procesar el formato JSON",
-                        categorias: "Error al procesar el formato JSON",
-                        etiquetas: "Error al procesar el formato JSON",
-                        respuesta_completa: response
+                        titulo: "Error en la generación",
+                        descripcion_corta: "Error en la generación",
+                        descripcion_completa: "Error en la generación",
+                        meta_descripcion: "Error en la generación",
+                        categorias: ["Error en la generación"],
+                        etiquetas: ["Error en la generación"]
                     };
                 }
+            } catch (error) {
+                console.error("Error generating WooCommerce content:", error);
+                throw new Error("Error al generar contenido para WooCommerce. Por favor, intenta de nuevo.");
             }
+        }
+        
+        // Generate Instagram Content
+        async function generateInstagramContent(antiqueData) {
+            const antiqueJson = JSON.stringify(antiqueData);
             
-            async function generateInstagramContent(researchData) {
-                console.log('Generating Instagram content...');
+            const messages = [
+                {
+                    role: "system", 
+                    content: "Eres un especialista en marketing digital para antigüedades y arte de lujo. Tu objetivo es crear posts cautivadores para Instagram que comuniquen elegancia, exclusividad y conocimiento. El tono debe ser sofisticado y atractivo para un público de alto poder adquisitivo."
+                },
+                {
+                    role: "user", 
+                    content: `Crea un post para Instagram sobre esta antigüedad:
+                    
+                    ${antiqueJson}
+                    
+                    El post debe incluir:
+                    1. TEXTO PRINCIPAL: Texto cautivador y elegante (máximo 100 palabras)
+                       - Debe destacar lo más interesante y valioso de la pieza
+                       - Debe mencionar que está disponible en Santa Emilia
+                       - Debe tener un tono exclusivo y sofisticado
+                    2. HASHTAGS: 8-12 hashtags relevantes y efectivos
+                    3. CALL TO ACTION: Invitación elegante a visitar o contactar
+                    
+                    Estructura tu respuesta en formato JSON con las claves: texto_principal, hashtags, call_to_action`
+                }
+            ];
+            
+            try {
+                const response = await callOpenAI(messages);
                 
-                const messages = [
-                    {
-                        role: "system",
-                        content: "Eres un especialista en marketing digital para antigüedades y arte de lujo. Tu objetivo es crear posts cautivadores para Instagram que comuniquen elegancia, exclusividad y conocimiento. El tono debe ser sofisticado y atractivo para un público de alto poder adquisitivo."
-                    },
-                    {
-                        role: "user",
-                        content: `Crea un post para Instagram sobre esta antigüedad:
-                        
-                        ${JSON.stringify(researchData, null, 2)}
-                        
-                        El post debe incluir:
-                        1. TEXTO PRINCIPAL: Texto cautivador y elegante (máximo 100 palabras)
-                           - Debe destacar lo más interesante y valioso de la pieza
-                           - Debe mencionar que está disponible en Santa Emilia
-                           - Debe tener un tono exclusivo y sofisticado
-                        2. HASHTAGS: 8-12 hashtags relevantes y efectivos
-                        3. CALL TO ACTION: Invitación elegante a visitar o contactar
-                        
-                        Estructura tu respuesta en formato JSON con las claves: texto_principal, hashtags, call_to_action`
-                    }
-                ];
-                
-                const response = await callOpenAIAPI(messages);
-                
+                // Parse JSON from response
                 try {
-                    // Extract JSON from the response
+                    // Find the JSON object in the response
                     const jsonMatch = response.match(/\{[\s\S]*\}/);
                     if (jsonMatch) {
-                        const data = JSON.parse(jsonMatch[0]);
-                        
-                        // Create complete Instagram post
-                        if (data.texto_principal && data.hashtags && data.call_to_action) {
-                            let hashtags = Array.isArray(data.hashtags) ? data.hashtags.join(' ') : data.hashtags;
-                            data.post_completo = `${data.texto_principal}\n\n${data.call_to_action}\n\n${hashtags}`;
-                        } else {
-                            data.post_completo = "Error al generar el post completo";
+                        return JSON.parse(jsonMatch[0]);
+                    } else {
+                        throw new Error("No se encontró un objeto JSON válido en la respuesta");
+                    }
+                } catch (jsonError) {
+                    console.error("Error parsing Instagram JSON:", jsonError);
+                    return {
+                        texto_principal: "Error en la generación",
+                        hashtags: ["Error en la generación"],
+                        call_to_action: "Error en la generación"
+                    };
+                }
+            } catch (error) {
+                console.error("Error generating Instagram content:", error);
+                throw new Error("Error al generar contenido para Instagram. Por favor, intenta de nuevo.");
+            }
+        }
+        
+        // Display Results
+        function displayResults(antique) {
+            // Research Results
+            elements.antiqueImage.src = antique.imageUrl;
+            elements.antiqueImage.alt = "Imagen de la antigüedad";
+            elements.initialDescription.textContent = antique.description;
+            elements.origin.textContent = antique.research.origen;
+            elements.period.textContent = antique.research.periodo;
+            elements.style.textContent = antique.research.estilo;
+            elements.materials.textContent = antique.research.materiales_tecnicas;
+            elements.value.textContent = antique.research.valor_mercado;
+            elements.particularities.textContent = antique.research.particularidades;
+            
+            // Sources
+            elements.sources.innerHTML = '';
+            if (Array.isArray(antique.research.fuentes)) {
+                antique.research.fuentes.forEach(source => {
+                    const li = document.createElement('li');
+                    li.textContent = source;
+                    elements.sources.appendChild(li);
+                });
+            } else {
+                const li = document.createElement('li');
+                li.textContent = "No se pudieron cargar las fuentes";
+                elements.sources.appendChild(li);
+            }
+            
+            // WooCommerce Results
+            elements.productTitle.textContent = antique.woocommerce.titulo;
+            elements.shortDescription.textContent = antique.woocommerce.descripcion_corta;
+            elements.fullDescription.innerHTML = antique.woocommerce.descripcion_completa;
+            elements.metaDescription.textContent = antique.woocommerce.meta_descripcion;
+            
+            // Categories & Tags
+            if (Array.isArray(antique.woocommerce.categorias)) {
+                elements.categories.innerHTML = antique.woocommerce.categorias.map(cat => `<span class="inline-block bg-gray-100 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">${cat}</span>`).join('');
+            } else {
+                elements.categories.textContent = antique.woocommerce.categorias;
+            }
+            
+            if (Array.isArray(antique.woocommerce.etiquetas)) {
+                elements.tags.innerHTML = antique.woocommerce.etiquetas.map(tag => `<span class="inline-block bg-gray-100 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">${tag}</span>`).join('');
+            } else {
+                elements.tags.textContent = antique.woocommerce.etiquetas;
+            }
+            
+            // Instagram Results
+            elements.instagramImage.src = antique.imageUrl;
+            elements.instagramImage.alt = "Imagen para Instagram";
+            elements.mainText.textContent = antique.instagram.texto_principal;
+            
+            if (Array.isArray(antique.instagram.hashtags)) {
+                elements.hashtags.textContent = antique.instagram.hashtags.join(' ');
+            } else {
+                elements.hashtags.textContent = antique.instagram.hashtags;
+            }
+            
+            elements.callToAction.textContent = antique.instagram.call_to_action;
+            
+            // Display the research tab by default
+            switchResultsTab('research');
+        }
+        
+        // Save Antique to Portfolio
+        function saveAntiqueToPortfolio() {
+            if (!state.currentAntique) {
+                alert('No hay información de antigüedad para guardar.');
+                return;
+            }
+            
+            if (!state.currentAntique.id) {
+                state.currentAntique.id = generateId();
+            }
+            
+            // Check if already exists, if so update it
+            const existingIndex = state.antiques.findIndex(a => a.id === state.currentAntique.id);
+            if (existingIndex >= 0) {
+                state.antiques[existingIndex] = state.currentAntique;
+            } else {
+                state.antiques.push(state.currentAntique);
+            }
+            
+            // Save to localStorage
+            localStorage.setItem('se_antiques', JSON.stringify(state.antiques));
+            
+            alert('Antigüedad guardada en el portfolio correctamente.');
+            
+            // Switch to portfolio view
+            switchTab('portfolio');
+            updatePortfolioView();
+        }
+        
+        // Update Portfolio View
+        function updatePortfolioView() {
+            // Update statistics
+            updatePortfolioStats();
+            
+            // Update charts
+            updatePortfolioCharts();
+            
+            // Render antiques grid
+            renderAntiquesGrid();
+        }
+        
+        // Update Portfolio Statistics
+        function updatePortfolioStats() {
+            const totalPieces = state.antiques.length;
+            elements.totalPieces.textContent = totalPieces;
+            
+            if (totalPieces === 0) {
+                elements.totalValue.textContent = '€0';
+                elements.avgValue.textContent = '€0';
+                elements.mainPeriod.textContent = '-';
+                return;
+            }
+            
+            // Calculate total value
+            let totalValue = 0;
+            let periodCounts = {};
+            
+            state.antiques.forEach(antique => {
+                // Extract value
+                let valueText = antique.research.valor_mercado || '';
+                // Extract numeric values from the text
+                const valueMatches = valueText.match(/(\d{1,3}(?:[.,]\d{3})*(?:[.,]\d{2})?)/g);
+                if (valueMatches && valueMatches.length > 0) {
+                    // Take the average of the found values
+                    let sum = 0;
+                    let count = 0;
+                    
+                    valueMatches.forEach(val => {
+                        // Normalize the value (remove commas, etc)
+                        val = val.replace(/[.,]/g, '');
+                        const num = parseInt(val, 10);
+                        if (!isNaN(num)) {
+                            sum += num;
+                            count++;
                         }
-                        
-                        return data;
-                    }
-                    
-                    // If no JSON found, return a formatted object with the full response
-                    return {
-                        texto_principal: "Error al procesar el formato JSON",
-                        hashtags: "Error al procesar el formato JSON",
-                        call_to_action: "Error al procesar el formato JSON",
-                        post_completo: "Error al procesar el formato JSON",
-                        respuesta_completa: response
-                    };
-                } catch (error) {
-                    console.error('Error parsing JSON response:', error);
-                    
-                    // Return a formatted object with the full response
-                    return {
-                        texto_principal: "Error al procesar el formato JSON",
-                        hashtags: "Error al procesar el formato JSON",
-                        call_to_action: "Error al procesar el formato JSON",
-                        post_completo: "Error al procesar el formato JSON",
-                        respuesta_completa: response
-                    };
-                }
-            }
-            
-            async function callOpenAIAPI(messages) {
-                const url = 'https://api.openai.com/v1/chat/completions';
-                const headers = {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${apiKey}`
-                };
-                const data = {
-                    model: 'gpt-4o',
-                    messages: messages,
-                    temperature: 0.7
-                };
-                
-                try {
-                    const response = await fetch(url, {
-                        method: 'POST',
-                        headers: headers,
-                        body: JSON.stringify(data)
                     });
                     
-                    if (!response.ok) {
-                        const errorData = await response.json();
-                        throw new Error(`API Error: ${errorData.error?.message || 'Unknown error'}`);
+                    if (count > 0) {
+                        totalValue += (sum / count);
                     }
-                    
-                    const result = await response.json();
-                    return result.choices[0].message.content;
-                } catch (error) {
-                    console.error('Error calling OpenAI API:', error);
-                    throw error;
+                }
+                
+                // Count periods
+                const period = extractMainPeriod(antique.research.periodo);
+                periodCounts[period] = (periodCounts[period] || 0) + 1;
+            });
+            
+            elements.totalValue.textContent = `€${formatNumber(totalValue)}`;
+            elements.avgValue.textContent = `€${formatNumber(totalValue / totalPieces)}`;
+            
+            // Find the most common period
+            let maxCount = 0;
+            let mainPeriod = '';
+            for (const [period, count] of Object.entries(periodCounts)) {
+                if (count > maxCount) {
+                    maxCount = count;
+                    mainPeriod = period;
                 }
             }
             
-            function displayResults(data) {
-                console.log('Displaying results:', data);
+            elements.mainPeriod.textContent = mainPeriod || '-';
+        }
+        
+        // Update Portfolio Charts
+        function updatePortfolioCharts() {
+            // Prepare data for charts
+            const styles = {};
+            const periods = {};
+            
+            state.antiques.forEach(antique => {
+                const style = extractMainStyle(antique.research.estilo);
+                styles[style] = (styles[style] || 0) + 1;
                 
-                // Research tab
-                document.getElementById('descripcionInicial').textContent = data.research.descripcionInicial || 'No disponible';
-                document.getElementById('origen').textContent = data.research.origen || 'No disponible';
-                document.getElementById('periodo').textContent = data.research.periodo || 'No disponible';
-                document.getElementById('estilo').textContent = data.research.estilo || 'No disponible';
-                document.getElementById('materialesTecnicas').textContent = data.research.materiales_tecnicas || 'No disponible';
-                document.getElementById('valorMercado').textContent = data.research.valor_mercado || 'No disponible';
-                document.getElementById('particularidades').textContent = data.research.particularidades || 'No disponible';
-                
-                // Format sources as a list if it's an array
-                const fuentes = document.getElementById('fuentes');
-                if (Array.isArray(data.research.fuentes)) {
-                    fuentes.innerHTML = data.research.fuentes.map((source, index) => `${index + 1}. ${source}`).join('<br>');
-                } else {
-                    fuentes.textContent = data.research.fuentes || 'No disponible';
-                }
-                
-                // WooCommerce tab
-                document.getElementById('wooTitulo').textContent = data.woocommerce.titulo || 'No disponible';
-                document.getElementById('wooDescCorta').textContent = data.woocommerce.descripcion_corta || 'No disponible';
-                document.getElementById('wooDescCompleta').innerHTML = data.woocommerce.descripcion_completa || 'No disponible';
-                document.getElementById('wooMetaDesc').textContent = data.woocommerce.meta_descripcion || 'No disponible';
-                
-                // Format categories and tags as lists if they're arrays
-                const wooCategorias = document.getElementById('wooCategorias');
-                if (Array.isArray(data.woocommerce.categorias)) {
-                    wooCategorias.innerHTML = data.woocommerce.categorias.map(cat => `• ${cat}`).join('<br>');
-                } else {
-                    wooCategorias.textContent = data.woocommerce.categorias || 'No disponible';
-                }
-                
-                const wooEtiquetas = document.getElementById('wooEtiquetas');
-                if (Array.isArray(data.woocommerce.etiquetas)) {
-                    wooEtiquetas.textContent = data.woocommerce.etiquetas.join(', ');
-                } else {
-                    wooEtiquetas.textContent = data.woocommerce.etiquetas || 'No disponible';
-                }
-                
-                // Instagram tab
-                document.getElementById('instaTexto').textContent = data.instagram.texto_principal || 'No disponible';
-                
-                const instaHashtags = document.getElementById('instaHashtags');
-                if (Array.isArray(data.instagram.hashtags)) {
-                    instaHashtags.textContent = data.instagram.hashtags.join(' ');
-                } else {
-                    instaHashtags.textContent = data.instagram.hashtags || 'No disponible';
-                }
-                
-                document.getElementById('instaCta').textContent = data.instagram.call_to_action || 'No disponible';
-                document.getElementById('instaCompleto').textContent = data.instagram.post_completo || 'No disponible';
+                const period = extractMainPeriod(antique.research.periodo);
+                periods[period] = (periods[period] || 0) + 1;
+            });
+            
+            // Create style chart
+            createChart(elements.styleChart, 'doughnut', 'Estilos', styles);
+            
+            // Create period chart
+            createChart(elements.periodChart, 'doughnut', 'Periodos', periods);
+        }
+        
+        // Create Chart
+        function createChart(canvas, type, label, data) {
+            // Destroy previous chart if exists
+            if (canvas.chart) {
+                canvas.chart.destroy();
             }
-        });
+            
+            const ctx = canvas.getContext('2d');
+            
+            const labels = Object.keys(data);
+            const values = Object.values(data);
+            
+            // Generate colors
+            const colors = generateColors(labels.length);
+            
+            canvas.chart = new Chart(ctx, {
+                type: type,
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: label,
+                        data: values,
+                        backgroundColor: colors,
+                        borderColor: colors.map(color => color.replace('0.6', '1')),
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'right',
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const label = context.label || '';
+                                    const value = context.raw;
+                                    const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                    const percentage = Math.round((value / total) * 100);
+                                    return `${label}: ${value} (${percentage}%)`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        
+        // Render Antiques Grid
+        function renderAntiquesGrid() {
+            const grid = elements.antiquesGrid;
+            grid.innerHTML = '';
+            
+            if (state.antiques.length === 0) {
+                const emptyMsg = document.createElement('div');
+                emptyMsg.className = 'col-span-full text-center py-10 text-gray-500';
+                emptyMsg.textContent = 'No hay antigüedades en el portfolio. Analiza y guarda piezas para comenzar.';
+                grid.appendChild(emptyMsg);
+                return;
+            }
+            
+            // Sort antiques by creation date (newest first)
+            const sortedAntiques = [...state.antiques].sort((a, b) => {
+                return new Date(b.createdAt) - new Date(a.createdAt);
+            });
+            
+            sortedAntiques.forEach(antique => {
+                const card = document.createElement('div');
+                card.className = 'card overflow-hidden';
+                card.innerHTML = `
+                    <img src="${antique.imageUrl}" alt="Antigüedad" class="w-full h-48 object-cover">
+                    <div class="p-4">
+                        <h3 class="font-bold text-lg mb-2">${extractTitle(antique)}</h3>
+                        <p class="text-sm text-gray-600 mb-2">${extractPeriod(antique)}</p>
+                        <p class="text-sm text-gray-700 mb-4">${truncateText(antique.description, 100)}</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-primary font-bold">${extractPrice(antique)}</span>
+                            <button class="text-primary hover:text-primary-dark" onclick="viewAntiqueDetails('${antique.id}')">
+                                <i class="fas fa-eye"></i> Ver
+                            </button>
+                        </div>
+                    </div>
+                `;
+                
+                grid.appendChild(card);
+            });
+        }
+        
+        // Filter Antiques
+        function filterAntiques() {
+            const searchTerm = elements.searchAntiques.value.toLowerCase();
+            const cards = elements.antiquesGrid.children;
+            
+            for (let i = 0; i < cards.length; i++) {
+                const card = cards[i];
+                const title = card.querySelector('h3').textContent.toLowerCase();
+                const period = card.querySelector('p:nth-of-type(1)').textContent.toLowerCase();
+                const description = card.querySelector('p:nth-of-type(2)').textContent.toLowerCase();
+                
+                if (title.includes(searchTerm) || period.includes(searchTerm) || description.includes(searchTerm)) {
+                    card.style.display = '';
+                } else {
+                    card.style.display = 'none';
+                }
+            }
+        }
+        
+        // View Antique Details
+        function viewAntiqueDetails(id) {
+            const antique = state.antiques.find(a => a.id === id);
+            if (!antique) return;
+            
+            state.currentAntique = antique;
+            displayResults(antique);
+            
+            switchTab('analysis');
+            elements.analysisResults.classList.remove('hidden');
+        }
+        
+        // Edit Current Antique
+        function editCurrentAntique() {
+            if (!state.currentAntique) return;
+            
+            // Set editing ID
+            state.editingAntiqueId = state.currentAntique.id;
+            
+            // Populate edit form
+            elements.editImageUrl.value = state.currentAntique.imageUrl;
+            elements.editDescription.value = state.currentAntique.description;
+            elements.editOrigin.value = state.currentAntique.research.origen;
+            elements.editPeriod.value = state.currentAntique.research.periodo;
+            elements.editStyle.value = state.currentAntique.research.estilo;
+            elements.editMaterials.value = state.currentAntique.research.materiales_tecnicas;
+            elements.editValue.value = state.currentAntique.research.valor_mercado;
+            elements.editParticularities.value = state.currentAntique.research.particularidades;
+            
+            // Sources as a list
+            if (Array.isArray(state.currentAntique.research.fuentes)) {
+                elements.editSources.value = state.currentAntique.research.fuentes.join('\n');
+            } else {
+                elements.editSources.value = state.currentAntique.research.fuentes || '';
+            }
+            
+            // Show the edit modal
+            elements.editModal.classList.remove('hidden');
+        }
+        
+        // Save Edited Antique
+        function saveEditedAntique() {
+            if (!state.editingAntiqueId) return;
+            
+            const antique = state.antiques.find(a => a.id === state.editingAntiqueId);
+            if (!antique) return;
+            
+            // Update the antique data
+            antique.imageUrl = elements.editImageUrl.value;
+            antique.description = elements.editDescription.value;
+            antique.research.origen = elements.editOrigin.value;
+            antique.research.periodo = elements.editPeriod.value;
+            antique.research.estilo = elements.editStyle.value;
+            antique.research.materiales_tecnicas = elements.editMaterials.value;
+            antique.research.valor_mercado = elements.editValue.value;
+            antique.research.particularidades = elements.editParticularities.value;
+            
+            // Process sources
+            const sourcesText = elements.editSources.value;
+            antique.research.fuentes = sourcesText.split('\n').filter(s => s.trim());
+            
+            // Save to localStorage
+            localStorage.setItem('se_antiques', JSON.stringify(state.antiques));
+            
+            // Update current antique if it's the one being edited
+            if (state.currentAntique && state.currentAntique.id === state.editingAntiqueId) {
+                state.currentAntique = antique;
+                displayResults(antique);
+            }
+            
+            // Close modal
+            closeEditModal();
+            
+            // Update portfolio if visible
+            if (!elements.portfolioSection.classList.contains('hidden')) {
+                updatePortfolioView();
+            }
+        }
+        
+        // Delete Antique
+        function deleteAntique() {
+            if (!state.editingAntiqueId) return;
+            
+            if (!confirm('¿Estás seguro de que deseas eliminar esta antigüedad? Esta acción no se puede deshacer.')) {
+                return;
+            }
+            
+            // Remove the antique
+            state.antiques = state.antiques.filter(a => a.id !== state.editingAntiqueId);
+            
+            // Save to localStorage
+            localStorage.setItem('se_antiques', JSON.stringify(state.antiques));
+            
+            // If we're viewing the deleted antique, clear the results
+            if (state.currentAntique && state.currentAntique.id === state.editingAntiqueId) {
+                state.currentAntique = null;
+                elements.analysisResults.classList.add('hidden');
+            }
+            
+            // Close modal
+            closeEditModal();
+            
+            // Update portfolio
+            updatePortfolioView();
+        }
+        
+        // Close Edit Modal
+        function closeEditModal() {
+            elements.editModal.classList.add('hidden');
+            state.editingAntiqueId = null;
+        }
+        
+        // Open Config Modal
+        function openConfigModal() {
+            elements.configApiKey.value = state.apiKey;
+            elements.configModel.value = state.model;
+            elements.configModal.classList.remove('hidden');
+        }
+        
+        // Close Config Modal
+        function closeConfigModal() {
+            elements.configModal.classList.add('hidden');
+        }
+        
+        // Save Config
+        function saveConfig() {
+            const apiKey = elements.configApiKey.value.trim();
+            const model = elements.configModel.value;
+            
+            if (apiKey && apiKey.startsWith('sk-')) {
+                state.apiKey = apiKey;
+                localStorage.setItem('se_api_key', apiKey);
+            }
+            
+            state.model = model;
+            localStorage.setItem('se_model', model);
+            
+            closeConfigModal();
+            alert('Configuración guardada correctamente.');
+        }
+        
+        // Export Database
+        function exportDatabase() {
+            const data = {
+                antiques: state.antiques,
+                version: "1.0",
+                exportedAt: new Date().toISOString()
+            };
+            
+            const dataStr = JSON.stringify(data, null, 2);
+            const dataUri = `data:application/json;charset=utf-8,${encodeURIComponent(dataStr)}`;
+            
+            const exportFileDefaultName = `santa_emilia_antiguedades_${new Date().toISOString().slice(0, 10)}.json`;
+            
+            const linkElement = document.createElement('a');
+            linkElement.setAttribute('href', dataUri);
+            linkElement.setAttribute('download', exportFileDefaultName);
+            linkElement.click();
+        }
+        
+        // Import Database
+        function importDatabase(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const data = JSON.parse(e.target.result);
+                    
+                    if (!data.antiques || !Array.isArray(data.antiques)) {
+                        throw new Error("Formato inválido: no se encontró un array de antigüedades");
+                    }
+                    
+                    if (!confirm(`¿Estás seguro de que deseas importar ${data.antiques.length} antigüedades? Esta acción reemplazará tu base de datos actual.`)) {
+                        return;
+                    }
+                    
+                    state.antiques = data.antiques;
+                    localStorage.setItem('se_antiques', JSON.stringify(state.antiques));
+                    
+                    updatePortfolioView();
+                    
+                    alert(`Importación exitosa: ${data.antiques.length} antigüedades importadas.`);
+                } catch (error) {
+                    alert(`Error al importar: ${error.message}`);
+                    console.error("Import error:", error);
+                }
+            };
+            reader.readAsText(file);
+            
+            // Reset the input
+            event.target.value = '';
+        }
+        
+        // Copy WooCommerce Content
+        function copyWoocommerceContent() {
+            if (!state.currentAntique) return;
+            
+            const content = `
+TÍTULO DEL PRODUCTO:
+${state.currentAntique.woocommerce.titulo}
+
+DESCRIPCIÓN CORTA:
+${state.currentAntique.woocommerce.descripcion_corta}
+
+DESCRIPCIÓN COMPLETA (HTML):
+${state.currentAntique.woocommerce.descripcion_completa}
+
+META DESCRIPCIÓN:
+${state.currentAntique.woocommerce.meta_descripcion}
+
+CATEGORÍAS:
+${Array.isArray(state.currentAntique.woocommerce.categorias) ? state.currentAntique.woocommerce.categorias.join(', ') : state.currentAntique.woocommerce.categorias}
+
+ETIQUETAS:
+${Array.isArray(state.currentAntique.woocommerce.etiquetas) ? state.currentAntique.woocommerce.etiquetas.join(', ') : state.currentAntique.woocommerce.etiquetas}
+            `;
+            
+            copyToClipboard(content);
+        }
+        
+        // Copy Instagram Content
+        function copyInstagramContent() {
+            if (!state.currentAntique) return;
+            
+            const content = `
+${state.currentAntique.instagram.texto_principal}
+
+${Array.isArray(state.currentAntique.instagram.hashtags) ? state.currentAntique.instagram.hashtags.join(' ') : state.currentAntique.instagram.hashtags}
+
+${state.currentAntique.instagram.call_to_action}
+            `;
+            
+            copyToClipboard(content);
+        }
+        
+        // Copy to Clipboard
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text)
+                .then(() => alert('Contenido copiado al portapapeles'))
+                .catch(err => {
+                    console.error('Error al copiar: ', err);
+                    alert('No se pudo copiar el contenido. Por favor, inténtalo manualmente.');
+                });
+        }
+        
+        // Helper Functions
+        
+        // Generate ID
+        function generateId() {
+            return 'se_' + Date.now().toString(36) + Math.random().toString(36).substr(2, 5);
+        }
+        
+        // Extract Title
+        function extractTitle(antique) {
+            if (antique.woocommerce && antique.woocommerce.titulo) {
+                return antique.woocommerce.titulo;
+            }
+            
+            // Extract from description
+            const desc = antique.description || '';
+            const firstSentence = desc.split('.')[0];
+            return firstSentence.length > 50 ? firstSentence.substring(0, 50) + '...' : firstSentence;
+        }
+        
+        // Extract Period
+        function extractPeriod(antique) {
+            if (antique.research && antique.research.periodo) {
+                const period = antique.research.periodo;
+                const firstSentence = period.split('.')[0];
+                return firstSentence.length > 60 ? firstSentence.substring(0, 60) + '...' : firstSentence;
+            }
+            return "Periodo no especificado";
+        }
+        
+        // Extract Price
+        function extractPrice(antique) {
+            if (antique.research && antique.research.valor_mercado) {
+                const value = antique.research.valor_mercado;
+                
+                // Look for patterns like €1000, 1000€, $1000, 1000$, etc.
+                const priceMatch = value.match(/[€$£]?\s*(\d{1,3}(?:[.,]\d{3})*(?:[.,]\d{2})?)\s*[€$£]?/);
+                if (priceMatch) {
+                    return `€${priceMatch[1]}`;
+                }
+                
+                // Look for ranges like 1000-2000
+                const rangeMatch = value.match(/(\d{1,3}(?:[.,]\d{3})*(?:[.,]\d{2})?)\s*[-–]\s*(\d{1,3}(?:[.,]\d{3})*(?:[.,]\d{2})?)/);
+                if (rangeMatch) {
+                    return `€${rangeMatch[1]}-${rangeMatch[2]}`;
+                }
+                
+                // Default: first 20 characters
+                return value.substring(0, 20) + (value.length > 20 ? '...' : '');
+            }
+            return "Precio no disponible";
+        }
+        
+        // Extract Main Period
+        function extractMainPeriod(periodText) {
+            if (!periodText) return "Desconocido";
+            
+            // Common period keywords
+            const periods = [
+                "Siglo XVII", "Siglo XVIII", "Siglo XIX", "Siglo XX",
+                "17th Century", "18th Century", "19th Century", "20th Century",
+                "Barroco", "Rococó", "Neoclásico", "Art Nouveau", "Art Deco",
+                "Baroque", "Rococo", "Neoclassical", "Georgian", "Victorian", "Edwardian",
+                "Renaissance", "Renacimiento", "Medieval", "Gothic", "Gótico",
+                "Luis XIII", "Luis XIV", "Luis XV", "Luis XVI",
+                "Louis XIII", "Louis XIV", "Louis XV", "Louis XVI",
+                "Regency", "Regencia", "Empire", "Imperio",
+                "1700", "1800", "1900", "1600"
+            ];
+            
+            for (const period of periods) {
+                if (periodText.includes(period)) {
+                    return period;
+                }
+            }
+            
+            // If no match, return the first sentence truncated
+            const firstSentence = periodText.split('.')[0];
+            return firstSentence.length > 30 ? firstSentence.substring(0, 30) + '...' : firstSentence;
+        }
+        
+        // Extract Main Style
+        function extractMainStyle(styleText) {
+            if (!styleText) return "Desconocido";
+            
+            // Common style keywords
+            const styles = [
+                "Barroco", "Rococó", "Neoclásico", "Art Nouveau", "Art Deco",
+                "Baroque", "Rococo", "Neoclassical", "Gothic", "Gótico",
+                "Renaissance", "Renacimiento", "Victorian", "Victoriano",
+                "Luis XIII", "Luis XIV", "Luis XV", "Luis XVI",
+                "Louis XIII", "Louis XIV", "Louis XV", "Louis XVI",
+                "Chippendale", "Sheraton", "Hepplewhite", "Queen Anne",
+                "Reina Ana", "Federal", "Biedermeier", "Jugendstil",
+                "Ming", "Qing", "Japonés", "Japanese", "Chinese", "Chino",
+                "Modernista", "Modernist", "Shaker", "Colonial"
+            ];
+            
+            for (const style of styles) {
+                if (styleText.includes(style)) {
+                    return style;
+                }
+            }
+            
+            // If no match, return the first sentence truncated
+            const firstSentence = styleText.split('.')[0];
+            return firstSentence.length > 30 ? firstSentence.substring(0, 30) + '...' : firstSentence;
+        }
+        
+        // Truncate Text
+        function truncateText(text, maxLength) {
+            if (!text) return "";
+            if (text.length <= maxLength) return text;
+            return text.substring(0, maxLength) + '...';
+        }
+        
+        // Format Number
+        function formatNumber(num) {
+            return Math.round(num).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+        }
+        
+        // Generate Colors for Charts
+        function generateColors(count) {
+            const colors = [];
+            const baseHues = [0, 30, 60, 120, 180, 210, 240, 270, 300, 330];
+            
+            for (let i = 0; i < count; i++) {
+                const hue = baseHues[i % baseHues.length];
+                const saturation = 60 + (i % 3) * 10;
+                const lightness = 50 + (i % 5) * 5;
+                colors.push(`hsla(${hue}, ${saturation}%, ${lightness}%, 0.6)`);
+            }
+            
+            return colors;
+        }
+        
+        // Initialize the app on load
+        document.addEventListener('DOMContentLoaded', initApp);
     </script>
 </body>
 </html>
